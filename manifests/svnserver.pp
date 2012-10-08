@@ -1,4 +1,5 @@
-class apache::svnserver inherits apache::ssl {
+class apache::svnserver {
+  include apache::ssl
 
   case $::operatingsystem {
 
@@ -23,8 +24,8 @@ class apache::svnserver inherits apache::ssl {
 
   apache::module {
     [
-      "dav",
-      "dav_svn",
+      'dav',
+      'dav_svn',
     ]:
     ensure  => present,
     require => Package[ $pkglist ],

@@ -2,45 +2,6 @@ class apache::redhat {
   include apache::base
   include apache::params
 
-  # BEGIN inheritance from apache::base
-  Exec['apache-graceful'] {
-    command => '/usr/sbin/apachectl graceful',
-    onlyif  => '/usr/sbin/apachectl configtest',
-  }
-
-  Package['apache'] {
-      require => [
-      File['/usr/local/sbin/a2ensite'],
-      File['/usr/local/sbin/a2dissite'],
-      File['/usr/local/sbin/a2enmod'],
-      File['/usr/local/sbin/a2dismod']
-      ],
-    }
-
-  # the following variables are used in template logrotate-httpd.erb
-  $logrotate_paths = "${apache::params::root}/*/logs/*.log ${apache::params::log}/*log"
-  $httpd_pid_file = $::operatingsystemrelease? {
-    /4.*|5.*/   => '/var/run/httpd.pid',
-    default     => '/var/run/httpd/httpd.pid',
-  }
-  $httpd_reload_cmd = '/sbin/service httpd reload > /dev/null 2> /dev/null || true'
-  $awstats_condition = '-x /etc/cron.hourly/awstats'
-  $awstats_command = '/etc/cron.hourly/awstats || true'
-  File['logrotate configuration'] {
-    path    => '/etc/logrotate.d/httpd',
-    content => template('apache/logrotate-httpd.erb'),
-  }
-
-  File['default status module configuration'] {
-    path   => "${apache::params::conf}/conf.d/status.conf",
-    source => 'puppet:///modules/apache/etc/httpd/conf/status.conf',
-  }
-
-  File['default virtualhost'] {
-    seltype => 'httpd_config_t',
-  }
-  # END inheritance from apache::base
-
   file {[
     '/usr/local/sbin/a2ensite',
     '/usr/local/sbin/a2dissite',
@@ -91,10 +52,11 @@ class apache::redhat {
   # the following command was used to generate the content of the directory:
   # egrep '(^|#)LoadModule' /etc/httpd/conf/httpd.conf | sed -r 's|#?(.+ (.+)_module .+)|echo "\1" > mods-available/redhat5/\2.load|' | sh
   # ssl.load was then changed to a template (see apache-ssl-redhat.pp)
-  $real_module_source = $::operatingsystemrelease? {
+  $real_module_source = $::operatingsystemrelease ? {
     /5.*/ => 'puppet:///modules/apache/etc/httpd/mods-available/redhat5/',
     /6.*/ => 'puppet:///modules/apache/etc/httpd/mods-available/redhat6/',
   }
+
   file { "${apache::params::conf}/mods-available":
     ensure  => directory,
     source  => $real_module_source,

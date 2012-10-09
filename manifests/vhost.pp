@@ -96,7 +96,7 @@ define apache::vhost (
         owner   => $wwwuser,
         group   => $wwwgroup,
         mode    => $mode,
-        seltype => $configseltype,
+        seltype => $sysseltype,
         require => [File["${apache::params::root}/${name}"]],
       }
 
@@ -215,7 +215,7 @@ define apache::vhost (
 
 
       exec {"enable vhost ${name}":
-        command => $enablecmd,
+        command => "${apache::params::a2ensite} ${name}",
         notify  => Exec['apache-graceful'],
         require => [File[$apache::params::a2ensite],
           File["${apache::params::conf}/sites-available/${name}"],
@@ -246,7 +246,7 @@ define apache::vhost (
       }
 
       exec { "disable vhost ${name}":
-        command => $disablecmd,
+        command => "${apache::params::a2dissite} ${name}",
         notify  => Exec['apache-graceful'],
         require => File[$apache::params::a2ensite],
         onlyif  => "/bin/sh -c '[ -L ${apache::params::conf}/sites-enabled/${name} ] \\
@@ -263,7 +263,7 @@ define apache::vhost (
       exec { "disable vhost ${name}":
         require => Package[$apache::params::pkg],
         notify  => Exec['apache-graceful'],
-        command => $disablecmd,
+        command => "${apache::params::a2dissite} ${name}",
         onlyif  => "/bin/sh -c '[ -L ${apache::params::conf}/sites-enabled/${name} ] \\
           && [ ${apache::params::conf}/sites-enabled/${name} -ef ${apache::params::conf}/sites-available/${name} ]'",
       }

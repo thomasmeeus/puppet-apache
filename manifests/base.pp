@@ -71,14 +71,15 @@ class apache::base {
     hasrestart => true,
     require    => Package['apache'],
   }
-
+  $logrotate_paths = "${apache::params::root}/*/logs/*.log ${apache::params::log}/*log"
   file {'logrotate configuration':
     ensure  => present,
-    path    => undef,
+    path    => "/etc/logrotate.d/${apache::params::pkg}",
     owner   => root,
     group   => root,
     mode    => '0644',
     source  => undef,
+    content => template('apache/logrotate-httpd.erb'),
     require => Package['apache'],
   }
 
@@ -94,12 +95,20 @@ class apache::base {
     notify => Exec['apache-graceful'],
   }
 
+  $statusfile_path = $::operatingsystem ? {
+    /RedHat|CentOS/      => "${apache::params::conf}/conf.d/status.conf",
+    /Ubuntu|Debian/      => "${apache::params::conf}/mods-available/status.conf",
+  }
+  $statusfile_source = $::operatingsystem ? {
+    /RedHat|CentOS/ => "${apache::params::conf}/mods-available/status.conf",
+    /Debian|Ubuntu/ => 'puppet:///modules/apache/etc/apache2/mods-available/status.conf',
+  }
   file {'default status module configuration':
     ensure  => present,
-    path    => undef,
+    path    => $statusfile_path,
     owner   => root,
     group   => root,
-    source  => undef,
+    source  => $statusfile_source,
     require => Module['status'],
     notify  => Exec['apache-graceful'],
   }
@@ -114,7 +123,7 @@ class apache::base {
     mode    => '0644',
   }
 
-  if $apache::apache_disable_default_vhost {
+  if $apache::params::apache_disable_default_vhost {
 
     file { "${apache::params::conf}/sites-enabled/000-default-vhost":
       ensure => absent,
@@ -136,9 +145,9 @@ class apache::base {
   }
 
   exec { 'apache-graceful':
-    command     => undef,
+    command     => '/usr/sbin/apachectl graceful',
     refreshonly => true,
-    onlyif      => undef,
+    onlyif      => '/usr/sbin/apachectl configtest',
   }
 
   file {'/usr/local/bin/htgroup':

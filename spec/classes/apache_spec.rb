@@ -20,8 +20,9 @@ define concat::fragment($ensure='present', $target, $content) {}
         ['5', '6'].each do |release|
           describe "with release #{release}" do
             let(:facts) { {
-              :operatingsystem   => os,
-              :lsbmajdistrelease => release,
+              :operatingsystem        => os,
+              :lsbmajdistrelease      => release,
+              :operatingsystemrelease => "#{release}.5",
             } }
 
             it { should include_class('apache::redhat') }

@@ -10,8 +10,9 @@ define concat::fragment($ensure='present', $target, $content) {}
   OSES.each do |os|
     describe "When on #{os}" do
       let(:facts) { {
-        :operatingsystem   => os,
-        :lsbmajdistrelease => '5',
+        :operatingsystem          => os,
+        :operatingsystemrelease   => '5.5',
+        :lsbmajdistrelease        => '5',
       } }
 
       if ['Debian', 'Ubuntu'].include? os

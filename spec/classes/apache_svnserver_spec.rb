@@ -10,8 +10,9 @@ define concat::fragment($ensure='present', $target, $content) {}
   OSES.each do |os|
     describe "When on #{os}" do
       let(:facts) { {
-        :operatingsystem   => os,
-        :lsbmajdistrelease => '5',
+        :operatingsystem        => os,
+        :lsbmajdistrelease      => '5',
+        :operatingsystemrelease => '5.5',
       } }
 
       it { should contain_package(VARS[os]['mod_svn']).with_ensure('present') }

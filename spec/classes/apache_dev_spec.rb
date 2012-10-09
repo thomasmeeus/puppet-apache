@@ -7,10 +7,8 @@ describe 'apache::dev' do
         :operatingsystem => os,
       } }
 
-      it do should contain_package('apache-devel').with(
-        'ensure' => 'present',
-        'name'   => VARS[os]['apache_devel']
-      ) end
+      it { should contain_package(VARS[os]['apache_devel']).with_ensure('present') }
+
     end
   end
 end

@@ -62,8 +62,7 @@ define concat::fragment($ensure='present', $target, $content) {}
         'ensure' => 'present',
         'owner'  => 'root',
         'group'  => 'root',
-        'mode'   => '0644',
-        'source' => nil
+        'mode'   => '0644'
       ) end
 
       it { should contain_apache__listen('80').with_ensure('present') }
@@ -76,8 +75,7 @@ define concat::fragment($ensure='present', $target, $content) {}
       it do should contain_file('default status module configuration').with(
         'ensure' => 'present',
         'owner'  => 'root',
-        'group'  => 'root',
-        'source' => nil
+        'group'  => 'root'
       ) end
 
       it do should contain_file('default virtualhost').with(
@@ -87,25 +85,25 @@ define concat::fragment($ensure='present', $target, $content) {}
       ) end
 
 
-      describe 'When disable default vhost' do
-        let(:facts) { {
-          :operatingsystem              => os,
-          :apache_disable_default_vhost => 'true'
-        } }
+      #describe 'When disable default vhost' do
+      #  let(:facts) { {
+      #    :operatingsystem              => os,
+      #    :apache_disable_default_vhost => 'true'
+      #  } }
 
-        it { should contain_file("#{VARS[os]['conf']}/sites-enabled/000-default-vhost").with_ensure('absent') }
-      end
+      #  it { should contain_file("#{VARS[os]['conf']}/sites-enabled/000-default-vhost").with_ensure('absent') }
+      #end
 
       # No disable default vhost
-      it do should contain_file("#{VARS[os]['conf']}/sites-enabled/000-default-vhost").with(
-        'ensure' => 'link',
-        'target' => "#{VARS[os]['conf']}/sites-available/default-vhost"
-      ) end
+      #it do should contain_file("#{VARS[os]['conf']}/sites-enabled/000-default-vhost").with(
+      #  'ensure' => 'link',
+      #  'target' => "#{VARS[os]['conf']}/sites-available/default-vhost"
+      #) end
 
       it do should contain_exec('apache-graceful').with(
-        'command'     => 'apache-graceful',
+        'command'     => '/usr/sbin/apachectl graceful',
         'refreshonly' => 'true',
-        'onlyif'      => nil
+        'onlyif'      => '/usr/sbin/apachectl configtest'
       ) end
 
       it do should contain_file('/usr/local/bin/htgroup').with(

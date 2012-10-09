@@ -1,35 +1,35 @@
 define apache::auth::htpasswd (
-  $ensure="present", 
+  $username,
+  $ensure='present',
   $vhost=false,
   $userFileLocation=false,
-  $userFileName="htpasswd",
-  $username,
+  $userFileName='htpasswd',
   $cryptPassword=false,
   $clearPassword=false){
 
   include apache::params
- 
+
   if $userFileLocation {
     $_userFileLocation = $userFileLocation
   } else {
     if $vhost {
       $_userFileLocation = "${apache::params::root}/${vhost}/private"
     } else {
-      fail "parameter vhost is require !"
+      fail 'parameter vhost is require !'
     }
   }
-  
+
   $_authUserFile = "${_userFileLocation}/${userFileName}"
-  
+
   case $ensure {
 
     'present': {
       if $cryptPassword and $clearPassword {
-        fail "choose only one of cryptPassword OR clearPassword !"
+        fail 'choose only one of cryptPassword OR clearPassword !'
       }
 
       if !$cryptPassword and !$clearPassword  {
-        fail "choose one of cryptPassword OR clearPassword !"
+        fail 'choose one of cryptPassword OR clearPassword !'
       }
 
       if $cryptPassword {
@@ -57,7 +57,8 @@ define apache::auth::htpasswd (
         command     => "rm -f ${_authUserFile}",
         onlyif      => "wc -l ${_authUserFile} | egrep -q '^0[^0-9]'",
         refreshonly => true,
-      } 
+      }
     }
+    default: {}
   }
 }

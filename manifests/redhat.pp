@@ -1,27 +1,27 @@
-class apache::redhat inherits apache::base {
-
+class apache::redhat {
+  include apache::base
   include apache::params
 
   # BEGIN inheritance from apache::base
   Exec['apache-graceful'] {
-    command => 'apachectl graceful',
-    onlyif  => 'apachectl configtest',
+    command => '/usr/sbin/apachectl graceful',
+    onlyif  => '/usr/sbin/apachectl configtest',
   }
 
   Package['apache'] {
-    require => [
+      require => [
       File['/usr/local/sbin/a2ensite'],
       File['/usr/local/sbin/a2dissite'],
       File['/usr/local/sbin/a2enmod'],
       File['/usr/local/sbin/a2dismod']
       ],
-  }
+    }
 
   # the following variables are used in template logrotate-httpd.erb
   $logrotate_paths = "${apache::params::root}/*/logs/*.log ${apache::params::log}/*log"
-  $httpd_pid_file = $::lsbmajdistrelease ? {
-    /4|5/   => '/var/run/httpd.pid',
-    default => '/var/run/httpd/httpd.pid',
+  $httpd_pid_file = $::operatingsystemrelease? {
+    /4.*|5.*/   => '/var/run/httpd.pid',
+    default     => '/var/run/httpd/httpd.pid',
   }
   $httpd_reload_cmd = '/sbin/service httpd reload > /dev/null 2> /dev/null || true'
   $awstats_condition = '-x /etc/cron.hourly/awstats'
@@ -54,11 +54,11 @@ class apache::redhat inherits apache::base {
     source => 'puppet:///modules/apache/usr/local/sbin/a2X.redhat',
   }
 
-  $httpd_mpm = $apache_mpm_type ? {
+  $httpd_mpm = $apache::apache_mpm_type ? {
     ''         => 'httpd', # default MPM
     'pre-fork' => 'httpd',
     'prefork'  => 'httpd',
-    default    => "httpd.${apache_mpm_type}",
+    default    => "httpd.${apache::apache_mpm_type}",
   }
 
   augeas { "select httpd mpm ${httpd_mpm}":
@@ -91,12 +91,13 @@ class apache::redhat inherits apache::base {
   # the following command was used to generate the content of the directory:
   # egrep '(^|#)LoadModule' /etc/httpd/conf/httpd.conf | sed -r 's|#?(.+ (.+)_module .+)|echo "\1" > mods-available/redhat5/\2.load|' | sh
   # ssl.load was then changed to a template (see apache-ssl-redhat.pp)
+  $real_module_source = $::operatingsystemrelease? {
+    /5.*/ => 'puppet:///modules/apache/etc/httpd/mods-available/redhat5/',
+    /6.*/ => 'puppet:///modules/apache/etc/httpd/mods-available/redhat6/',
+  }
   file { "${apache::params::conf}/mods-available":
     ensure  => directory,
-    source  => $::lsbmajdistrelease ? {
-      5 => 'puppet:///modules/apache/etc/httpd/mods-available/redhat5/',
-      6 => 'puppet:///modules/apache/etc/httpd/mods-available/redhat6/',
-    },
+    source  => $real_module_source,
     recurse => true,
     mode    => '0755',
     owner   => 'root',

@@ -5,12 +5,12 @@ class apache::params {
     /Debian|Ubuntu/ => 'apache2',
   }
 
-  $root = $apache_root ? {
-    "" => $::operatingsystem ? {
+  $root = $apache::apache_root ? {
+    ''      => $::operatingsystem ? {
       /RedHat|CentOS/ => '/var/www/vhosts',
       /Debian|Ubuntu/ => '/var/www',
     },
-    default => $apache_root
+    default => $apache::apache_root
   }
 
   $user = $::operatingsystem ? {
@@ -42,9 +42,6 @@ class apache::params {
     /RedHat|CentOS/ => '/usr/local/sbin/a2ensite',
     /Debian|Ubuntu/ => '/usr/sbin/a2ensite',
   }
-
-
-
 
   $error_log = $::operatingsystem ? {
     /RedHat|CentOS/ => "${log}/error_log",

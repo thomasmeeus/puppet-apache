@@ -91,12 +91,13 @@ class apache::redhat {
   # the following command was used to generate the content of the directory:
   # egrep '(^|#)LoadModule' /etc/httpd/conf/httpd.conf | sed -r 's|#?(.+ (.+)_module .+)|echo "\1" > mods-available/redhat5/\2.load|' | sh
   # ssl.load was then changed to a template (see apache-ssl-redhat.pp)
+  $real_module_source = $::operatingsystemrelease? {
+    /5.*/ => 'puppet:///modules/apache/etc/httpd/mods-available/redhat5/',
+    /6.*/ => 'puppet:///modules/apache/etc/httpd/mods-available/redhat6/',
+  }
   file { "${apache::params::conf}/mods-available":
     ensure  => directory,
-    source  => $::operatingsystemrelease? {
-      /5.*/ => 'puppet:///modules/apache/etc/httpd/mods-available/redhat5/',
-      /6.*/ => 'puppet:///modules/apache/etc/httpd/mods-available/redhat6/',
-    },
+    source  => $real_module_source,
     recurse => true,
     mode    => '0755',
     owner   => 'root',

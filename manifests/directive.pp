@@ -15,32 +15,32 @@ Parameters:
   in alphabetical order.
 
 Requires:
-- Class["apache"]
+- Class['apache']
 - matching Apache::Vhost[] instance
 
 Example usage:
 
-  apache::directive { "example 1":
+  apache::directive { 'example 1':
     ensure    => present,
-    directive => "
+    directive => '
       RewriteEngine on
       RewriteRule ^/?$ https://www.example.com/
-    ",
-    vhost     => "www.example.com",
+    ',
+    vhost     => 'www.example.com',
   }
 
-  apache::directive { "example 2":
+  apache::directive { 'example 2':
     ensure    => present,
-    directive => content("example/snippet.erb"),
-    vhost     => "www.example.com",
+    directive => content('example/snippet.erb'),
+    vhost     => 'www.example.com',
   }
 
 */
-define apache::directive ($ensure="present", $directive="", $filename="", $vhost) {
+define apache::directive ($vhost, $ensure=present, $directive='', $filename='') {
 
   include apache::params
 
-  if ($ensure == 'present' and $directive == '') {
+  if ($ensure == present and $directive == '') {
     fail 'empty "directive" parameter'
   }
 

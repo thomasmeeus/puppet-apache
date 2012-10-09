@@ -97,18 +97,21 @@ define apache::balancer (
     }
   }
 
+  $confseltype = $::operatingsystem ? {
+    'RedHat' => 'httpd_config_t',
+    'CentOS' => 'httpd_config_t',
+    default  => undef,
+  }
+
+  $real_conf_path = $filename ? {
+    ''      => "${apache::params::root}/${vhost}/conf/balancer-${fname}.conf",
+    default => "${apache::params::root}/${vhost}/conf/${filename}",
+  }
   file{"${name} balancer on ${vhost}":
     ensure  => $ensure,
     content => template('apache/balancer.erb'),
-    seltype => $::operatingsystem ? {
-      'RedHat' => 'httpd_config_t',
-      'CentOS' => 'httpd_config_t',
-      default  => undef,
-    },
-    path    => $filename ? {
-      ''      => "${apache::params::root}/${vhost}/conf/balancer-${fname}.conf",
-      default => "${apache::params::root}/${vhost}/conf/${filename}",
-    },
+    seltype => $confseltype,
+    path    => $real_conf_path,
     notify  => Exec['apache-graceful'],
     require => Apache::Vhost[$vhost],
   }

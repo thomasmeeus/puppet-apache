@@ -13,23 +13,23 @@ Parameters:
   in alphabetical order.
 
 Requires:
-- Class["apache"]
+- Class['apache']
 
 Example usage:
 
-  apache::confd { "example 1":
+  apache::confd { 'example 1':
     ensure        => present,
-    configuration => "WSGIPythonEggs /var/cache/python-eggs",
+    configuration => 'WSGIPythonEggs /var/cache/python-eggs',
   }
 
 */
-define apache::confd($ensure=present, $configuration, $filename="") {
+define apache::confd($configuration, $ensure=present, $filename='') {
   include apache::params
   apache::conf {$name:
     ensure        => $ensure,
     path          => "${apache::params::conf}/conf.d",
     filename      => $filename,
     configuration => $configuration,
-    notify        => Service["apache"],
+    notify        => Service['apache'],
   }
 }

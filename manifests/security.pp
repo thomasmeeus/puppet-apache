@@ -29,7 +29,7 @@ class apache::security {
     }
 
     default: {
-      fail ("Operating system not supported: '${operatingsystem}'")
+      fail ("Operating system not supported: '${::operatingsystem}'")
     }
   }
 

@@ -10,11 +10,11 @@
 #   include apache::dev
 #
 class apache::dev {
-  package { 'apache-devel':
-    name    => $::operatingsystem ? {
-      /RedHat|CentOS/ => 'httpd-devel',
-      /Debian|Ubuntu/ => 'apache2-threaded-dev',
-    },
+  $pkgname  = $::operatingsystem ? {
+    /RedHat|CentOS/ => 'httpd-devel',
+    /Debian|Ubuntu/ => 'apache2-threaded-dev',
+  }
+  package { $pkgname:
     ensure  => present,
     require => Package['gcc'],
   }

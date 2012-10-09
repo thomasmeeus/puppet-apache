@@ -26,7 +26,7 @@ define apache::aw-stats($ensure=present, $aliases=[]) {
     ensure  => $ensure,
     owner   => root,
     group   => root,
-    source  => awstatsconf,
+    source  => $awstatsconf,
     seltype => $confseltype,
     notify  => Exec['apache-graceful'],
     require => Apache::Vhost[$name],

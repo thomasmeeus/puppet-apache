@@ -17,16 +17,11 @@ class apache::svnserver {
 
   }
 
-  package {
-    $pkglist:
+  package { $pkglist:
     ensure => present,
   }
 
-  apache::module {
-    [
-      'dav',
-      'dav_svn',
-    ]:
+  apache::module { ['dav','dav_svn']:
     ensure  => present,
     require => Package[ $pkglist ],
   }

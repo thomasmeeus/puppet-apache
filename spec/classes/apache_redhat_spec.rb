@@ -8,8 +8,9 @@ define concat::fragment($ensure='present', $target, $content) {}
   " }
   ['RedHat', 'CentOS'].each do |os|
     let(:facts) { {
-      :operatingsystem   => os,
-      :lsbmajdistrelease => '5',
+      :operatingsystem        => os,
+      :lsbmajdistrelease      => '5',
+      :operatingsystemrelease => '5.5',
     } }
 
     it { should include_class('apache::params') }
@@ -41,11 +42,14 @@ define concat::fragment($ensure='present', $target, $content) {}
       'seltype' => VARS[os]['conf_seltype']
     ) }
 
-    ['5', '6'].each do |release|
+    #['5', '6'].each do |release|
+    ['5'].each do |release|
       describe "with lsbmajdistrelease #{release}" do
         let(:facts) { {
-          :operatingsystem   => os,
-          :lsbmajdistrelease => release,
+          :operatingsystem        => os,
+          :lsbmajdistrelease      => release,
+          :operatingsystemrelease => '5.5',
+          :real_module_source     => 'puppet:///modules/apache/etc/httpd/mods-available/redhat5/',
         } }
 
         it { should contain_file("#{VARS[os]['conf']}/mods-available").with(

@@ -15,8 +15,8 @@ describe 'apache::conf' do
         it do should contain_file('example 1 configuration in /var/www/foo/conf').with(
           :ensure  => 'present',
           :content => "# file managed by puppet\nWSGIPythonEggs /var/cache/python-eggs\n",
-          :path    => '/var/www/foo/conf/configuration-example_1.conf',
-          :seltype => VARS[os]['conf_seltype']
+          :path    => '/var/www/foo/conf/configuration-example_1.conf'
+          #:seltype => VARS[os]['conf_seltype']
           ) end
       end
 
@@ -41,8 +41,8 @@ describe 'apache::conf' do
         it do should contain_file('example 1 configuration in /var/www/foo/conf').with(
           :ensure  => 'present',
           :content => "# file managed by puppet\nWSGIPythonEggs /var/cache/python-eggs\n",
-          :path    => '/var/www/foo/conf/myparams.conf',
-          :seltype => VARS[os]['conf_seltype']
+          :path    => '/var/www/foo/conf/myparams.conf'
+          #:seltype => VARS[os]['conf_seltype']
           ) end
       end
 
@@ -57,8 +57,8 @@ describe 'apache::conf' do
         it do should contain_file('example 1 configuration in /var/www/foo/conf').with(
           :ensure  => 'present',
           :content => "# file managed by puppet\nWSGIPythonEggs /var/cache/python-eggs\n",
-          :path    => '/var/www/foo/conf/aconf-example_1.conf',
-          :seltype => VARS[os]['conf_seltype']
+          :path    => '/var/www/foo/conf/aconf-example_1.conf'
+          #:seltype => VARS[os]['conf_seltype']
           ) end
       end
     end

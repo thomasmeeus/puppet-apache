@@ -34,7 +34,7 @@ define concat::fragment($ensure='present', $target, $content) {}
           'owner'   => 'root',
           'group'   => 'root',
           'mode'    => '0644',
-          'content' => "<html><body><h1>It works!</h1></body></html>\n"
+          'content' => "<html><body><h1>It works!</h1></body></html>"
         ) end
 
         it { should contain_file("#{VARS[os]['conf']}/conf.d/servername.conf").with_content("ServerName myhost.com\n") }

@@ -11,6 +11,6 @@ class apache::webdav::ssl::debian {
         mode    => '0755',
       }
     }
-    default:
+    default: {}
   }
 }

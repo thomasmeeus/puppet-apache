@@ -28,89 +28,93 @@ class apache::base {
     force   => true,
   }
 
-  file {"root directory":
-    path => $apache::params::root,
-    ensure => directory,
-    mode => '0755',
-    owner => "root",
-    group => "root",
-    require => Package["apache"],
+  file {'root directory':
+    ensure  => directory,
+    path    => $apache::params::root,
+    mode    => '0755',
+    owner   => 'root',
+    group   => 'root',
+    require => Package['apache'],
   }
 
-  file {"log directory":
-    path => $apache::params::log,
-    ensure => directory,
-    mode => '0755',
-    owner => "root",
-    group  => "root",
-    require => Package["apache"],
+  file {'log directory':
+    ensure  => directory,
+    path    => $apache::params::log,
+    mode    => '0755',
+    owner   => 'root',
+    group   => 'root',
+    require => Package['apache'],
   }
 
-  user { "apache user":
-    name    => $apache::params::user,
+  user { 'apache user':
     ensure  => present,
-    require => Package["apache"],
-    shell   => "/bin/sh",
-  }
-
-  group { "apache group":
     name    => $apache::params::user,
-    ensure  => present,
-    require => Package["apache"],
+    require => Package['apache'],
+    shell   => '/bin/sh',
   }
 
-  package { "apache":
-    name   => $apache::params::pkg,
+  group { 'apache group':
+    ensure  => present,
+    name    => $apache::params::user,
+    require => Package['apache'],
+  }
+
+  package { 'apache':
     ensure => installed,
+    name   => $apache::params::pkg,
   }
 
-  service { "apache":
-    name       => $apache::params::pkg,
+  service { 'apache':
     ensure     => running,
+    name       => $apache::params::pkg,
     enable     => true,
     hasrestart => true,
-    require    => Package["apache"],
+    require    => Package['apache'],
   }
 
-  file {"logrotate configuration":
-    path => undef,
-    ensure => present,
-    owner => root,
-    group => root,
-    mode => '0644',
-    source => undef,
-    require => Package["apache"],
-  }
-
-  apache::listen { "80": ensure => present }
-  apache::namevhost { "*:80": ensure => present }
-
-  apache::module {["alias", "auth_basic", "authn_file", "authz_default", "authz_groupfile", "authz_host", "authz_user", "autoindex", "dir", "env", "mime", "negotiation", "rewrite", "setenvif", "status", "cgi"]:
-    ensure => present,
-    notify => Exec["apache-graceful"],
-  }
-
-  file {"default status module configuration":
-    path => undef,
-    ensure => present,
-    owner => root,
-    group => root,
-    source => undef,
-    require => Module["status"],
-    notify => Exec["apache-graceful"],
-  }
-
-  file {"default virtualhost":
-    path    => "${apache::params::conf}/sites-available/default-vhost",
+  file {'logrotate configuration':
     ensure  => present,
-    content => template("apache/default-vhost.erb"),
-    require => Package["apache"],
-    notify  => Exec["apache-graceful"],
+    path    => undef,
+    owner   => root,
+    group   => root,
+    mode    => '0644',
+    source  => undef,
+    require => Package['apache'],
+  }
+
+  apache::listen { '80':
+    ensure => present
+  }
+  apache::namevhost { '*:80':
+    ensure => present
+  }
+
+  apache::module {['alias', 'auth_basic', 'authn_file', 'authz_default', 'authz_groupfile', 'authz_host', 'authz_user', 'autoindex', 'dir', 'env', 'mime', 'negotiation', 'rewrite', 'setenvif', 'status', 'cgi']:
+    ensure => present,
+    notify => Exec['apache-graceful'],
+  }
+
+  file {'default status module configuration':
+    ensure  => present,
+    path    => undef,
+    owner   => root,
+    group   => root,
+    source  => undef,
+    require => Module['status'],
+    notify  => Exec['apache-graceful'],
+  }
+
+  file {'default virtualhost':
+    ensure  => present,
+    path    => "${apache::params::conf}/sites-available/default-vhost",
+    content => template('apache/default-vhost.erb'),
+    require => Package['apache'],
+    notify  => Exec['apache-graceful'],
     before  => File["${apache::params::conf}/sites-enabled/000-default-vhost"],
     mode    => '0644',
   }
 
-  if $apache_disable_default_vhost {
+  if $apache::apache_disable_default_vhost {
 
     file { "${apache::params::conf}/sites-enabled/000-default-vhost":
       ensure => absent,
@@ -125,31 +129,31 @@ class apache::base {
       notify => Exec['apache-graceful'],
     }
 
-    file { "${apache::params::root}/html": 
+    file { "${apache::params::root}/html":
       ensure  => directory,
     }
 
   }
 
-  exec { "apache-graceful":
-    command => undef,
+  exec { 'apache-graceful':
+    command     => undef,
     refreshonly => true,
-    onlyif => undef,
+    onlyif      => undef,
   }
 
-  file {"/usr/local/bin/htgroup":
-    ensure => present,
-    owner => root,
-    group => root,
-    mode => '0755',
-    source => "puppet:///modules/apache/usr/local/bin/htgroup",
+  file {'/usr/local/bin/htgroup':
+    ensure  => present,
+    owner   => root,
+    group   => root,
+    mode    => '0755',
+    source  => 'puppet:///modules/apache/usr/local/bin/htgroup',
   }
 
   file { ["${apache::params::conf}/sites-enabled/default",
           "${apache::params::conf}/sites-enabled/000-default",
           "${apache::params::conf}/sites-enabled/default-ssl"]:
     ensure => absent,
-    notify => Exec["apache-graceful"],
+    notify => Exec['apache-graceful'],
   }
 
 }

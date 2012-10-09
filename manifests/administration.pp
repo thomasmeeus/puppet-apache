@@ -4,10 +4,10 @@ class apache::administration {
 
   $distro_specific_apache_sudo = $::operatingsystem ? {
     /RedHat|CentOS/ => "/usr/sbin/apachectl, /sbin/service ${apache::params::pkg}",
-    /Debian|Ubuntu/ => "/usr/sbin/apache2ctl",
+    /Debian|Ubuntu/ => '/usr/sbin/apache2ctl',
   }
 
-  group { "apache-admin":
+  group { 'apache-admin':
     ensure => present,
   }
 
@@ -15,10 +15,10 @@ class apache::administration {
   $wwwpkgname = $apache::params::pkg
   $wwwuser    = $apache::params::user
 
-  sudo::directive { "apache-administration":
-    ensure => present,
-    content => template("apache/sudoers.apache.erb"),
-    require => Group["apache-admin"],
+  sudo::directive { 'apache-administration':
+    ensure  => present,
+    content => template('apache/sudoers.apache.erb'),
+    require => Group['apache-admin'],
   }
 
 }

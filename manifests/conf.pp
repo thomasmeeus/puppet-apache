@@ -9,8 +9,8 @@ Parameters:
 - *ensure*:        present/absent.
 - *configuration*: apache configuration(s) to be applied
 - *filename*:      basename of the file in which the configuration(s) will be put.
-                   Useful in the case configuration order matters: apache reads the files in conf.d/
-                   in alphabetical order.
+                    Useful in the case configuration order matters: apache reads the files in conf.d/
+                    in alphabetical order.
 - *prefix*:        filename prefix
 - *path*:          directory for the file
 
@@ -26,7 +26,7 @@ Example usage:
   }
 
 */
-define apache::conf($ensure=present, $filename="", $prefix="configuration", $configuration, $path) {
+define apache::conf($configuration, $path, $ensure=present, $filename='', $prefix='configuration') {
   $fname = regsubst($name, '\s', '_', 'G')
 
   if ($path == '') {
@@ -37,18 +37,21 @@ define apache::conf($ensure=present, $filename="", $prefix="configuration", $con
     fail('empty "configuration" parameter')
   }
 
+  $confseltype = $::operatingsystem ? {
+    'RedHat' => 'httpd_config_t',
+    'CentOS' => 'httpd_config_t',
+    default  => undef,
+  }
+
+  $real_conf_path = $filename ? {
+    ''      => "${path}/${prefix}-${fname}.conf",
+    default => "${path}/${filename}",
+  }
   file{ "${name} configuration in ${path}":
     ensure  => $ensure,
     content => "# file managed by puppet\n${configuration}\n",
-    seltype => $::operatingsystem ? {
-      'RedHat' => 'httpd_config_t',
-      'CentOS' => 'httpd_config_t',
-      default  => undef,
-    },
-    path    => $filename ? {
-      ''      => "${path}/${prefix}-${fname}.conf",
-      default => "${path}/${filename}",
-    },
+    seltype => $confseltype,
+    path    => $real_conf_path,
     notify  => Exec['apache-graceful'],
   }
 

@@ -36,14 +36,15 @@ define apache::auth::basic::file::webdav::user (
     $_users = $rw_users
   }
 
+  $confseltype = $::operatingsystem ? {
+    'RedHat' => 'httpd_config_t',
+    'CentOS' => 'httpd_config_t',
+    default  => undef,
+  }
   file { "${apache::params::root}/${vhost}/conf/auth-basic-file-webdav-${fname}.conf":
     ensure     => $ensure,
     content    => template('apache/auth-basic-file-webdav-user.erb'),
-    seltype    => $::operatingsystem ? {
-      'RedHat' => 'httpd_config_t',
-      'CentOS' => 'httpd_config_t',
-      default  => undef,
-    },
+    seltype    => $confseltype,
     notify     => Exec['apache-graceful'],
   }
 

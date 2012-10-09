@@ -1,11 +1,11 @@
+require 'rubygems'
 require 'rake'
 
-require 'rspec/core/rake_task'
-require 'puppet-lint/tasks/puppet-lint'
+task_dir = File.expand_path("../tasks", __FILE__)
 
-RSpec::Core::RakeTask.new(:spec) do |t|
-  t.pattern = 'spec/*/*_spec.rb'
-  t.rspec_opts = ['-c']
+FileList["#{task_dir}/**/*.rake"].each { |fn| load fn }
+
+desc "Default task prints the available targets."
+task :default do
+  sh %{rake -T}
 end
-
-task :default => [:spec, :lint]

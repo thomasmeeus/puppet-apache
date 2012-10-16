@@ -100,8 +100,8 @@ class apache::base {
     /Ubuntu|Debian/      => "${apache::params::conf}/mods-available/status.conf",
   }
   $statusfile_source = $::operatingsystem ? {
-    /RedHat|CentOS/ => "${apache::params::conf}/mods-available/status.conf",
-    /Debian|Ubuntu/ => 'puppet:///modules/apache/etc/apache2/mods-available/status.conf',
+    /RedHat|CentOS/ => "puppet:///modules/apache/${apache::params::conf}/conf/status.conf",
+    /Debian|Ubuntu/ => "puppet:///modules/apache/${apache::params::conf}/mods-available/status.conf",
   }
   file {'default status module configuration':
     ensure  => present,

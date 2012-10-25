@@ -105,7 +105,7 @@ describe 'apache::vhost' do
 
         it { should contain_exec("remove #{VARS[os]['root']}/#{vhost}").with(
           :command => "rm -rf #{VARS[os]['root']}/#{vhost}",
-          :onlyif  => "test -d #{VARS[os]['root']}/#{vhost}"
+          :onlyif  => "/usr/bin/test -d #{VARS[os]['root']}/#{vhost}"
         ) }
 
         it { should contain_exec("disable vhost #{vhost}").with(

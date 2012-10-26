@@ -5,12 +5,12 @@ class apache::params {
     /Debian|Ubuntu/ => 'apache2',
   }
 
-  $root = $apache::apache_root ? {
+  $root = $apache::apache_vhost_root ? {
     ''      => $::operatingsystem ? {
       /RedHat|CentOS/ => '/var/www/vhosts',
       /Debian|Ubuntu/ => '/var/www',
     },
-    default => $apache::apache_root
+    default => $apache::apache_vhost_root
   }
 
   $user = $::operatingsystem ? {

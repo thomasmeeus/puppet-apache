@@ -104,7 +104,7 @@ describe 'apache::vhost' do
         it { should contain_file("#{VARS[os]['conf']}/sites-available/#{vhost}").with_ensure('absent') }
 
         it { should contain_exec("remove #{VARS[os]['root']}/#{vhost}").with(
-          :command => "rm -rf #{VARS[os]['root']}/#{vhost}",
+          :command => "/bin/rm -rf #{VARS[os]['root']}/#{vhost}",
           :onlyif  => "/usr/bin/test -d #{VARS[os]['root']}/#{vhost}"
         ) }
 

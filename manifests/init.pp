@@ -11,9 +11,13 @@ the apache class behaves the same way on diffrent distributions.
 Example usage:
 
   include apache
+  or
+  class { 'apache':
+    apache_vhost_root => '/data/www'
+  }
 
 */
-class apache {
+class apache($apache_vhost_root='') {
   case $::operatingsystem {
     Debian,Ubuntu:  { include apache::debian}
     RedHat,CentOS:  { include apache::redhat}

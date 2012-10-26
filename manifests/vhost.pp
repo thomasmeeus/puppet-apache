@@ -240,7 +240,7 @@ define apache::vhost (
       }
 
       exec { "remove ${apache::params::root}/${name}":
-        command => "rm -rf ${apache::params::root}/${name}",
+        command => "/bin/rm -rf ${apache::params::root}/${name}",
         onlyif  => "/usr/bin/test -d ${apache::params::root}/${name}",
         require => Exec["disable vhost ${name}"],
       }

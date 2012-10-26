@@ -10,6 +10,9 @@ define concat::fragment($ensure='present', $target, $content) {}
   OSES.each do |os|
     describe "When on #{os}" do
       if ['Debian', 'Ubuntu'].include? os
+        let(:params) { {
+          :apache_vhost_root            => '/data/www',
+        }}
         let(:facts) { {
           :operatingsystem   => os,
         } }
@@ -19,6 +22,9 @@ define concat::fragment($ensure='present', $target, $content) {}
         # NOTE: RHEL4 is not supported
         ['5', '6'].each do |release|
           describe "with release #{release}" do
+            let(:params) { {
+              :apache_vhost_root            => '/data/www',
+            }}
             let(:facts) { {
               :operatingsystem        => os,
               :lsbmajdistrelease      => release,

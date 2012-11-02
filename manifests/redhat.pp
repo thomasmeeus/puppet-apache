@@ -77,6 +77,7 @@ class apache::redhat {
   # it makes no sens to put CGI here, deleted from the default vhost config
   file {'/var/www/cgi-bin':
     ensure  => absent,
+    recurse => true,
     require => Package['apache'],
   }
 

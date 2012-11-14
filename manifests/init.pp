@@ -17,7 +17,7 @@ Example usage:
   }
 
 */
-class apache($apache_vhost_root='') {
+class apache($apache_vhost_root='',$ensure_status='running') {
   case $::operatingsystem {
     Debian,Ubuntu:  { include apache::debian}
     RedHat,CentOS:  { include apache::redhat}

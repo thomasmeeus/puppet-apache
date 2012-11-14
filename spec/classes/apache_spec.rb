@@ -12,6 +12,7 @@ define concat::fragment($ensure='present', $target, $content) {}
       if ['Debian', 'Ubuntu'].include? os
         let(:params) { {
           :apache_vhost_root            => '/data/www',
+          :ensure_status                => 'running',
         }}
         let(:facts) { {
           :operatingsystem   => os,

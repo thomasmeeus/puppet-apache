@@ -1,6 +1,7 @@
 #include apache
 class { 'apache':
   apache_vhost_root => '/data/www',
+  ensure_status     => 'stopped',
 }
 
 apache::vhost { 'www.dummy.tld':

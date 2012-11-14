@@ -13,6 +13,11 @@ class apache::params {
     default => $apache::apache_vhost_root
   }
 
+  $service_status = $apache::ensure_status ? {
+    ''      => 'running',
+    default => $apache::ensure_status
+  }
+
   $user = $::operatingsystem ? {
     /RedHat|CentOS/ => 'apache',
     /Debian|Ubuntu/ => 'www-data',

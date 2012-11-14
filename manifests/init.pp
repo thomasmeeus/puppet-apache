@@ -13,11 +13,12 @@ Example usage:
   include apache
   or
   class { 'apache':
-    apache_vhost_root => '/data/www'
+    apache_vhost_root => '/data/www',
+    ensure_status     => 'running'
   }
 
 */
-class apache($apache_vhost_root='',$ensure_status='running') {
+class apache($apache_vhost_root='',$ensure_status='') {
   case $::operatingsystem {
     Debian,Ubuntu:  { include apache::debian}
     RedHat,CentOS:  { include apache::redhat}

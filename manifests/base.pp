@@ -65,7 +65,7 @@ class apache::base {
   }
 
   service { 'apache':
-    ensure     => running,
+    ensure     => $apache::ensure_status,
     name       => $apache::params::pkg,
     enable     => true,
     hasrestart => true,

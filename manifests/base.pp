@@ -83,10 +83,10 @@ class apache::base {
     require => Package['apache'],
   }
 
-  apache::listen { '80':
+  apache::listen { $apache::params::default_port:
     ensure => present
   }
-  apache::namevhost { '*:80':
+  apache::namevhost { "*:${apache::params::default_port}":
     ensure => present
   }
 

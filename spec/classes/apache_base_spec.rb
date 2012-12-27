@@ -65,9 +65,6 @@ define concat::fragment($ensure='present', $target, $content) {}
         'mode'   => '0644'
       ) end
 
-      it { should contain_apache__listen('80').with_ensure('present') }
-      it { should contain_apache__namevhost('*:80').with_ensure('present') }
-
       MODULES.each do |m|
         it { should contain_apache__module(m).with_ensure('present') }
       end

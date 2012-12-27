@@ -14,11 +14,12 @@ Example usage:
   or
   class { 'apache':
     apache_vhost_root => '/data/www',
-    ensure_status     => 'running'
+    ensure_status     => 'running',
+    default_port      => '8080',
   }
 
 */
-class apache($apache_vhost_root='',$ensure_status='') {
+class apache($apache_vhost_root='',$ensure_status='',$default_port='80') {
   case $::operatingsystem {
     Debian,Ubuntu:  { include apache::debian}
     RedHat,CentOS:  { include apache::redhat}

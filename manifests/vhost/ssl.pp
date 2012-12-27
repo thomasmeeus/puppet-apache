@@ -62,6 +62,8 @@ Parameters:
 - *sslports*: array specifying the ports on which the SSL vhost will be
   reachable. Defaults to "*:443".
 - *accesslog_format*: format string for access logs. Defaults to "combined".
+- *gen-ssl*: if set to "true", the generate-ssl-cert.sh script will create a
+  new ssl certificate for your vhost.
 
 Requires:
 - Class["apache-ssl"]

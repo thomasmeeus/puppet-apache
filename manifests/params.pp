@@ -18,6 +18,11 @@ class apache::params {
     default => $apache::ensure_status
   }
 
+  $default_port = $apache::default_port ? {
+    ''      => '80',
+    default => $apache::default_port,
+  }
+
   $user = $::operatingsystem ? {
     /RedHat|CentOS/ => 'apache',
     /Debian|Ubuntu/ => 'www-data',

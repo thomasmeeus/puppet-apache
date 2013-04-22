@@ -1,8 +1,8 @@
 # file managed by puppet
 <%= scope.lookupvar('apache::params::logrotate_paths') %> {
-    weekly
+    daily 
     missingok
-    rotate 52
+    rotate 7
     compress
     delaycompress
     notifempty

@@ -69,7 +69,7 @@ class apache::params {
     /Debian|Ubuntu/ => '/var/run/apache2.pid',
   }
   $httpd_reload_cmd = $::operatingsystem ? {
-    /RedHat|CentOS/ => '/sbin/service httpd reload > /dev/null 2> /dev/null || true',
+    /RedHat|CentOS/ => '/sbin/service httpd graceful > /dev/null 2> /dev/null || true',
     /Debian|Ubuntu/ => '/etc/init.d/apache2 restart > /dev/null',
   }
   $awstats_condition = $::operatingsystem ? {

@@ -67,8 +67,8 @@ describe 'apache::vhost' do
         ['access', 'error'].each do |f|
           it { should contain_file("#{VARS[os]['root']}/#{vhost}/logs/#{f}.log").with(
             :ensure  => 'present',
-            :owner   => 'root',
-            :group   => 'adm',
+            :owner   => 'apache',
+            :group   => 'apache',
             :mode    => '0644',
             :seltype => VARS[os]['log_seltype']
           ) }

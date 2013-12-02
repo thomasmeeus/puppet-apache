@@ -58,8 +58,8 @@ describe 'apache::vhost' do
 
         it { should contain_file("#{VARS[os]['root']}/#{vhost}/logs").with(
           :ensure  => 'directory',
-          :owner   => 'root',
-          :group   => 'root',
+          :owner   => 'apache',
+          :group   => 'apache',
           :mode    => '0755',
           :seltype => VARS[os]['log_seltype']
         ) }

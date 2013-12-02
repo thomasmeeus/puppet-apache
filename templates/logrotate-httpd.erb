@@ -6,7 +6,7 @@
     compress
     delaycompress
     notifempty
-    create 644 root adm
+    create 644 apache apache
     sharedscripts
     prerotate
         if [ <%= scope.lookupvar('apache::params::awstats_condition') %> ]; then

@@ -9,7 +9,7 @@ describe 'apache::vhost' do
         :operatingsystem => os,
       } }
 
-      it { should include_class('apache::params') }
+      it { should contain_class('apache::params') }
 
       describe 'ensuring present with defaults' do
         it { should contain_file("#{VARS[os]['conf']}/sites-available/#{vhost}").with(

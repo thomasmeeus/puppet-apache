@@ -14,7 +14,7 @@ define concat::fragment($ensure='present', $target, $content) {}
         :operatingsystem => os,
       } }
 
-      it { should include_class('apache::params') }
+      it { should contain_class('apache::params') }
 
       ['present', 'absent'].each do |e|
         describe "ensuring #{e}" do

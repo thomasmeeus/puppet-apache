@@ -15,7 +15,7 @@ define concat::fragment($ensure='present', $target, $content) {}
         :operatingsystem => os,
       } }
 
-      it { should include_class('apache::params') }
+      it { should contain_class('apache::params') }
 
       describe 'using default values' do
         it { should contain_package('apache2-mpm-prefork').with_ensure('installed') }

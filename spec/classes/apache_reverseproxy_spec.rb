@@ -7,7 +7,7 @@ describe 'apache::reverseproxy' do
         :operatingsystem => os,
       } }
 
-      it { should include_class('apache::params') }
+      it { should contain_class('apache::params') }
 
       REVERSEPROXY_MODULES.each do |m|
         it { should contain_apache__module(m).with_ensure('present') }

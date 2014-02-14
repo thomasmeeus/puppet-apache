@@ -16,9 +16,9 @@ define concat::fragment($ensure='present', $target, $content) {}
       } }
 
       if ['Debian', 'Ubuntu'].include? os
-        it { should include_class('apache::ssl::debian') }
+        it { should contain_class('apache::ssl::debian') }
       elsif ['RedHat', 'CentOS'].include? os
-        it { should include_class('apache::ssl::redhat') }
+        it { should contain_class('apache::ssl::redhat') }
       end
     end
   end
@@ -30,7 +30,7 @@ define concat::fragment($ensure='present', $target, $content) {}
 
     it do
       expect {
-        should include_class('apache::ssl::debian')
+        should contain_class('apache::ssl::debian')
       }.to raise_error(Puppet::Error, /Unsupported operatingsystem Fedora/)
     end
   end

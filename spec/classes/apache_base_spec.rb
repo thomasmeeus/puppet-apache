@@ -13,9 +13,9 @@ define concat::fragment($ensure='present', $target, $content) {}
         :operatingsystem => os,
       } }
 
-      it { should include_class('apache::params') }
+      it { should contain_class('apache::params') }
 
-      it { should include_class('concat::setup') }
+      it { should contain_class('concat::setup') }
 
       it { should contain_concat("#{VARS[os]['conf']}/ports.conf") }
 

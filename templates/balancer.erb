@@ -11,7 +11,7 @@ ProxyPassReverse <%= @location %> <%= @balancer %>/
 <Proxy <%= @balancer %>>
 
 <% @members.each do |member| -%>
-    BalancerMember <%= proto %>://<%= member %><% @params.each do |param| -%> <%= param %><% end -%>
+    BalancerMember <%= @proto %>://<%= member %><% @params.each do |param| -%> <%= param %><% end -%>
 
 <% end -%>
 

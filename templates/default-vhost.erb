@@ -1,6 +1,6 @@
 # file managed by puppet
 <VirtualHost *:80>
-  DocumentRoot <%=scope.lookupvar("apache::params::root")%>/html
+  DocumentRoot <%= scope.lookupvar("apache::params::root") %>/html
   ServerName localhost
 
   <Directory />
@@ -15,8 +15,8 @@
     allow from all
   </Directory>
 
-  ErrorLog <%= error_log %>
+  ErrorLog <%= @error_log %>
   LogLevel warn
-  CustomLog <%= access_log %> combined
+  CustomLog <%= @access_log %> combined
   ServerSignature Off
 </VirtualHost>

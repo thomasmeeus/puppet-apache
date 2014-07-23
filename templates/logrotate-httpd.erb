@@ -1,6 +1,6 @@
 # file managed by puppet
 <%= scope.lookupvar('apache::params::logrotate_paths') %> {
-    daily 
+    daily
     missingok
     rotate 7
     compress

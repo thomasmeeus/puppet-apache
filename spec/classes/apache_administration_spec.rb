@@ -9,7 +9,7 @@ describe 'apache::administration' do
         :operatingsystem => os,
       } }
 
-      it { should include_class('apache::params') }
+      it { should contain_class('apache::params') }
 
       it { should contain_sudo__directive('apache-administration').with_ensure('present') }
     end

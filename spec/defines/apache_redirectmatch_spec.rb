@@ -15,7 +15,7 @@ describe 'apache::redirectmatch' do
           :url    => 'http://foobar.example.com/',
           :vhost  => 'www.example.com',
         } }
-        it { should include_class('apache::params') }
+        it { should contain_class('apache::params') }
 
         it { should contain_file('example redirect on www.example.com').with(
           :ensure  => 'present',
@@ -33,7 +33,7 @@ describe 'apache::redirectmatch' do
           :vhost  => 'www.example.com',
         } }
 
-        it { should include_class('apache::params') }
+        it { should contain_class('apache::params') }
 
         it { should contain_file('example redirect on www.example.com').with_ensure('absent') }
       end
@@ -47,7 +47,7 @@ describe 'apache::redirectmatch' do
 
         it do
           expect {
-            should include_class('apache::params')
+            should contain_class('apache::params')
           }.to raise_error(Puppet::Error, /Must pass regex to Apache::Redirectmatch\[example\]/)
         end
       end

@@ -13,7 +13,7 @@ define concat::fragment($ensure='present', $target, $content) {}
       :operatingsystemrelease => '5.5',
     } }
 
-    it { should include_class('apache::params') }
+    it { should contain_class('apache::params') }
 
     ['a2ensite', 'a2dissite', 'a2enmod', 'a2dismod'].each do |script|
       it { should contain_file("/usr/local/sbin/#{script}").with(

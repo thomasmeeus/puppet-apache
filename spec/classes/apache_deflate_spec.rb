@@ -7,7 +7,7 @@ describe 'apache::deflate' do
         :operatingsystem => os,
       } }
 
-      it { should include_class('apache::params') }
+      it { should contain_class('apache::params') }
 
       it { should contain_apache__module('deflate').with_ensure('present') }
 

@@ -15,7 +15,7 @@ describe 'apache::confd' do
           :configuration => 'WSGIPythonEggs /var/cache/python-eggs'
         } }
 
-        it { should include_class('apache::params') }
+        it { should contain_class('apache::params') }
 
         it do should contain_apache__conf('example 1').with(
           'ensure'        => 'present',
@@ -31,7 +31,7 @@ describe 'apache::confd' do
           :configuration => 'WSGIPythonEggs /var/cache/python-eggs'
         } }
 
-        it { should include_class('apache::params') }
+        it { should contain_class('apache::params') }
 
         it do should contain_apache__conf('example 1').with(
           'ensure'        => 'absent',

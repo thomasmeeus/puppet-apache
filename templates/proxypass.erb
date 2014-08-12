@@ -3,11 +3,10 @@
 SSLProxyEngine On
 <% end %>
 
-<Proxy <%= url %>*>
+<Proxy <%= @url %>*>
     Order deny,allow
     Allow from all
 </Proxy>
 
-ProxyPass <%= location %> <%= url -%> <%= params.join(' ') %>
-ProxyPassReverse <%= location %> <%= url %>
-
+ProxyPass <%= @location %> <%= @url -%> <%= @params.join(' ') %>
+ProxyPassReverse <%= @location %> <%= @url %>

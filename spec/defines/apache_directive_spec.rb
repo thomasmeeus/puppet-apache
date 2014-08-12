@@ -15,7 +15,7 @@ describe 'apache::directive' do
           :vhost     => 'www.example.com',
         } }
 
-        it { should include_class('apache::params') }
+        it { should contain_class('apache::params') }
 
         it do should contain_apache__conf('example 1').with(
           'ensure'        => 'present',
@@ -34,7 +34,7 @@ describe 'apache::directive' do
           :vhost     => 'www.example.com',
         } }
 
-        it { should include_class('apache::params') }
+        it { should contain_class('apache::params') }
 
         it { should contain_apache__conf('example 1').with_ensure('absent') }
       end

@@ -18,7 +18,7 @@ define concat::fragment($ensure='present', $target, $content) {}
           :operatingsystem   => os,
         } }
 
-        it { should include_class('apache::debian') }
+        it { should contain_class('apache::debian') }
       elsif ['RedHat', 'CentOS'].include? os
         # NOTE: RHEL4 is not supported
         ['5', '6'].each do |release|
@@ -32,7 +32,7 @@ define concat::fragment($ensure='present', $target, $content) {}
               :operatingsystemrelease => "#{release}.5",
             } }
 
-            it { should include_class('apache::redhat') }
+            it { should contain_class('apache::redhat') }
           end
         end
       end
@@ -46,7 +46,7 @@ define concat::fragment($ensure='present', $target, $content) {}
 
     it do
       expect {
-        should include_class('apache::debian')
+        should contain_class('apache::debian')
       }.to raise_error(Puppet::Error, /Unsupported operatingsystem Fedora/)
     end
   end

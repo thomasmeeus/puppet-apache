@@ -9,7 +9,7 @@ describe 'apache::vhost' do
         :operatingsystem => os,
       } }
 
-      it { should include_class('apache::params') }
+      it { should contain_class('apache::params') }
 
       describe 'ensuring present with defaults' do
         it { should contain_file("#{VARS[os]['conf']}/sites-available/#{vhost}").with(
@@ -58,8 +58,8 @@ describe 'apache::vhost' do
 
         it { should contain_file("#{VARS[os]['root']}/#{vhost}/logs").with(
           :ensure  => 'directory',
-          :owner   => 'root',
-          :group   => 'root',
+          :owner   => 'apache',
+          :group   => 'apache',
           :mode    => '0755',
           :seltype => VARS[os]['log_seltype']
         ) }
@@ -67,8 +67,8 @@ describe 'apache::vhost' do
         ['access', 'error'].each do |f|
           it { should contain_file("#{VARS[os]['root']}/#{vhost}/logs/#{f}.log").with(
             :ensure  => 'present',
-            :owner   => 'root',
-            :group   => 'adm',
+            :owner   => 'apache',
+            :group   => 'apache',
             :mode    => '0644',
             :seltype => VARS[os]['log_seltype']
           ) }

@@ -53,7 +53,7 @@ describe 'apache::balancer' do
           :vhost  => 'www.example.com',
         } }
 
-        it { should include_class('apache::params') }
+        it { should contain_class('apache::params') }
 
         it { should contain_apache__module('proxy').with_ensure('absent') }
         it { should contain_apache__module('proxy_balancer').with_ensure('absent') }
@@ -70,7 +70,7 @@ describe 'apache::balancer' do
 
         it do
           expect {
-            should include_class('apache::params')
+            should contain_class('apache::params')
           }.to raise_error(Puppet::Error, /foo/)
         end
       end

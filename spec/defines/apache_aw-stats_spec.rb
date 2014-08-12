@@ -9,7 +9,7 @@ describe 'apache::aw-stats' do
         :operatingsystem => os,
       } }
 
-      it { should include_class('apache::params') }
+      it { should contain_class('apache::params') }
 
       it { should contain_file('/etc/awstats/awstats.foo.conf').with_ensure('present') }
 

@@ -1,12 +1,12 @@
 # file managed by puppet
 <%= scope.lookupvar('apache::params::logrotate_paths') %> {
-    weekly
+    daily
     missingok
-    rotate 52
+    rotate 7
     compress
     delaycompress
     notifempty
-    create 644 root adm
+    create 644 apache apache
     sharedscripts
     prerotate
         if [ <%= scope.lookupvar('apache::params::awstats_condition') %> ]; then

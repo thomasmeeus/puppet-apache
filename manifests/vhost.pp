@@ -170,8 +170,8 @@ define apache::vhost (
       }
       file {"${apache::params::root}/${name}/logs":
         ensure  => directory,
-        owner   => root,
-        group   => root,
+        owner   => apache,
+        group   => apache,
         mode    => '0755',
         seltype => $logseltype,
         require => File["${apache::params::root}/${name}"],
@@ -182,8 +182,8 @@ define apache::vhost (
       file { ["${apache::params::root}/${name}/logs/access.log",
               "${apache::params::root}/${name}/logs/error.log"] :
         ensure  => present,
-        owner   => root,
-        group   => adm,
+        owner   => apache,
+        group   => apache,
         mode    => '0644',
         seltype => $logseltype,
         require => File["${apache::params::root}/${name}/logs"],

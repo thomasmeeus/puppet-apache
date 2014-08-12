@@ -1,4 +1,7 @@
 # file managed by puppet
+<% if @sslbackend %>
+SSLProxyEngine On
+<% end %>
 
 <Proxy <%= @url %>*>
     Order deny,allow

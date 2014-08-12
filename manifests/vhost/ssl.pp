@@ -158,13 +158,13 @@ define apache::vhost::ssl (
   }
 
   # define variable names used in vhost-ssl.erb template
-  $certfile      = "${apache::params::root}/$name/ssl/$name.crt"
-  $certkeyfile   = "${apache::params::root}/$name/ssl/$name.key"
-  $csrfile       = "${apache::params::root}/$name/ssl/$name.csr"
+  $certfile      = "${apache::params::root}/${name}/ssl/${name}.crt"
+  $certkeyfile   = "${apache::params::root}/${name}/ssl/${name}.key"
+  $csrfile       = "${apache::params::root}/${name}/ssl/${name}.csr"
 
   # By default, use CA certificate list shipped with the distribution.
   if $cacert != false {
-    $cacertfile = "${apache::params::root}/$name/ssl/cacert.crt"
+    $cacertfile = "${apache::params::root}/${name}/ssl/cacert.crt"
   } else {
     $cacertfile = $::operatingsystem ? {
       /RedHat|CentOS/ => '/etc/pki/tls/certs/ca-bundle.crt',
@@ -174,11 +174,11 @@ define apache::vhost::ssl (
 
   # If a revocation file is provided
   if $cacrl != false {
-    $cacrlfile = "${apache::params::root}/$name/ssl/cacert.crl"
+    $cacrlfile = "${apache::params::root}/${name}/ssl/cacert.crl"
   }
 
   if $certchain != false {
-    $certchainfile = "${apache::params::root}/$name/ssl/certchain.crt"
+    $certchainfile = "${apache::params::root}/${name}/ssl/certchain.crt"
   }
 
   $conf_content = $config_content ? {
@@ -228,7 +228,7 @@ define apache::vhost::ssl (
     # The certificate and the private key will be generated only if $name.crt
     # or $name.key are absent from the "ssl/" subdir.
     # The CSR will be re-generated each time this resource is triggered.
-    exec { "generate-ssl-cert-$name":
+    exec { "generate-ssl-cert-${name}":
       command => "/usr/local/sbin/generate-ssl-cert.sh ${name} ${apache::params::root}/${name}/ssl/ssleay.cnf ${apache::params::root}/${name}/ssl/ ${days}",
       creates => $csrfile,
       notify  => Exec['apache-graceful'],
@@ -329,13 +329,13 @@ define apache::vhost::ssl (
         false   => undef,
         default => "file://${csrfile}",
       }
-    file { "public CSR file for $name":
+    file { "public CSR file for ${name}":
       ensure  => $real_publish_csr,
       path    => $real_csr_path,
       source  => $real_csr_source,
       mode    => '0640',
       seltype => 'httpd_sys_content_t',
-      require => Exec["generate-ssl-cert-$name"],
+      require => Exec["generate-ssl-cert-${name}"],
     }
 
   }

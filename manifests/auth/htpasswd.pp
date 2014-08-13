@@ -34,7 +34,7 @@ define apache::auth::htpasswd (
 
       if $cryptPassword {
         exec {"/usr/bin/test -f ${_authUserFile} || OPT='-c'; ${htpasswd_cmd} -bp \${OPT} ${_authUserFile} ${username} '${cryptPassword}'":
-          unless  => "/bin/grep -q ${username}:${cryptPassword} ${_authUserFile}",
+          unless  => "/bin/grep -q \"${username}:${cryptPassword}\" ${_authUserFile}",
           require => File[$_userFileLocation],
         }
       }

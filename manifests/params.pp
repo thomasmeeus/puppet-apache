@@ -73,11 +73,11 @@ class apache::params {
     /Debian|Ubuntu/ => '/etc/init.d/apache2 restart > /dev/null',
   }
   $htpasswd_cmd = $::operatingsystem ? {
-    /RedHet|CentOS/ => '/usr/bin/htpasswd',
+    /RedHat|CentOS/ => '/usr/bin/htpasswd',
     /Debian|Ubuntu/ => '/usr/bin/htpasswd',
   }
   $openssl_cmd = $::operatingsystem ? {
-    /RedHet|CentOS/ => '/usr/bin/openssl',
+    /RedHat|CentOS/ => '/usr/bin/openssl',
     /Debian|Ubuntu/ => '/usr/bin/openssl',
   }
   $awstats_condition = $::operatingsystem ? {

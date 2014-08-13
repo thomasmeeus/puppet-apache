@@ -15,7 +15,7 @@ define apache::auth::htpasswd (
     if $vhost {
       $_userFileLocation = "${apache::params::root}/${vhost}/private"
     } else {
-      fail 'parameter vhost is require !'
+      fail 'parameter vhost is required !'
     }
   }
 
@@ -33,15 +33,15 @@ define apache::auth::htpasswd (
       }
 
       if $cryptPassword {
-        exec {"test -f ${_authUserFile} || OPT='-c'; htpasswd -bp \${OPT} ${_authUserFile} ${username} '${cryptPassword}'":
-          unless  => "grep -q ${username}:${cryptPassword} ${_authUserFile}",
+        exec {"/usr/bin/test -f ${_authUserFile} || OPT='-c'; ${htpasswd_cmd} -bp \${OPT} ${_authUserFile} ${username} '${cryptPassword}'":
+          unless  => "/bin/grep -q \"${username}:${cryptPassword}\" ${_authUserFile}",
           require => File[$_userFileLocation],
         }
       }
 
       if $clearPassword {
-        exec {"test -f ${_authUserFile} || OPT='-c'; htpasswd -b \$OPT ${_authUserFile} ${username} ${clearPassword}":
-          unless  => "egrep '^${username}:' ${_authUserFile} && grep ${username}:\$(mkpasswd -S \$(egrep '^${username}:' ${_authUserFile} |cut -d : -f 2 |cut -c-2) ${clearPassword}) ${_authUserFile}",
+        exec {"/usr/bin/test -f ${_authUserFile} || OPT='-c'; ${htpasswd_cmd} -bm \$OPT ${_authUserFile} ${username} '${clearPassword}'":
+          unless  => "/bin/egrep \"^${username}:\" ${_authUserFile} && /bin/grep \"${username}:$(/bin/echo '${clearPassword}' | ${openssl_cmd} passwd -arp1 -salt $(/bin/egrep \"^${username}:\" ${_authUserFile} | cut -d'$' -f2))\" ${_authUserFile}",
           require => File[$_userFileLocation],
         }
       }
@@ -49,13 +49,13 @@ define apache::auth::htpasswd (
 
     'absent': {
       exec {"htpasswd -D ${_authUserFile} ${username}":
-        onlyif => "egrep -q '^${username}:' ${_authUserFile}",
+        onlyif => "/bin/egrep -q '^${username}:' ${_authUserFile}",
         notify => Exec["delete ${_authUserFile} after remove ${username}"],
       }
 
       exec {"delete ${_authUserFile} after remove ${username}":
         command     => "rm -f ${_authUserFile}",
-        onlyif      => "wc -l ${_authUserFile} | egrep -q '^0[^0-9]'",
+        onlyif      => "wc -l ${_authUserFile} | /bin/egrep -q '^0[^0-9]'",
         refreshonly => true,
       }
     }

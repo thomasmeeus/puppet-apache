@@ -72,6 +72,14 @@ class apache::params {
     /RedHat|CentOS/ => '/sbin/service httpd graceful > /dev/null 2> /dev/null || true',
     /Debian|Ubuntu/ => '/etc/init.d/apache2 restart > /dev/null',
   }
+  $htpasswd_cmd = $::operatingsystem ? {
+    /RedHet|CentOS/ => '/usr/bin/htpasswd',
+    /Debian|Ubuntu/ => '/usr/bin/htpasswd',
+  }
+  $openssl_cmd = $::operatingsystem ? {
+    /RedHet|CentOS/ => '/usr/bin/openssl',
+    /Debian|Ubuntu/ => '/usr/bin/openssl',
+  }
   $awstats_condition = $::operatingsystem ? {
     /RedHat|CentOS/ => '-x /etc/cron.hourly/awstats',
     /Debian|Ubuntu/ => '-f /usr/share/doc/awstats/examples/awstats_updateall.pl -a -f /usr/lib/cgi-bin/awstats.pl',

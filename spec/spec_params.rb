@@ -29,6 +29,8 @@ VARS = {
     'a2dismod'       => '/usr/sbin/a2dismod',
     'mod_security'   => 'libapache-mod-security',
     'mod_svn'        => 'libapache2-svn',
+    'openssl_cmd'    => '/usr/bin/openssl',
+    'htpasswd_cmd'   => '/usr/bin/htpasswd',
   },
 
   'RedHat'           => {
@@ -53,6 +55,8 @@ VARS = {
     'a2dismod'       => '/usr/local/sbin/a2dismod',
     'mod_security'   => 'mod_security',
     'mod_svn'        => 'mod_dav_svn',
+    'openssl_cmd'    => '/usr/bin/openssl',
+    'htpasswd_cmd'   => '/usr/bin/htpasswd',
   },
 }
 VARS['Ubuntu'] = VARS['Debian']

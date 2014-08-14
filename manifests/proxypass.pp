@@ -41,7 +41,7 @@ define apache::proxypass (
   $url='',
   $params=[],
   $filename='',
-  $sslbackend=undef
+  $sslbackend=false
 ) {
 
   $fname = regsubst($name, '\s', '_', 'G')
@@ -58,7 +58,7 @@ define apache::proxypass (
     }
   }
 
-  if defined($sslbackend) {
+  if ($sslbackend) {
     if defined(Apache::Module['ssl']) {} else {
       apache::module {'ssl':
       }

@@ -33,22 +33,22 @@ define apache::auth::htpasswd (
       }
 
       if $cryptPassword {
-        exec {"/usr/bin/test -f ${_authUserFile} || OPT='-c'; ${htpasswd_cmd} -bp \${OPT} ${_authUserFile} ${username} '${cryptPassword}'":
+        exec {"/usr/bin/test -f ${_authUserFile} || OPT='-c'; ${apache::params::htpasswd_cmd} -bp \${OPT} ${_authUserFile} ${username} '${cryptPassword}'":
           unless  => "/bin/grep -q \"${username}:${cryptPassword}\" ${_authUserFile}",
           require => File[$_userFileLocation],
         }
       }
 
       if $clearPassword {
-        exec {"/usr/bin/test -f ${_authUserFile} || OPT='-c'; ${htpasswd_cmd} -bm \$OPT ${_authUserFile} ${username} '${clearPassword}'":
-          unless  => "/bin/egrep \"^${username}:\" ${_authUserFile} && /bin/grep \"${username}:$(/bin/echo '${clearPassword}' | ${openssl_cmd} passwd -arp1 -salt $(/bin/egrep \"^${username}:\" ${_authUserFile} | cut -d'$' -f2))\" ${_authUserFile}",
+        exec {"/usr/bin/test -f ${_authUserFile} || OPT='-c'; ${apache::params::htpasswd_cmd} -bm \$OPT ${_authUserFile} ${username} '${clearPassword}'":
+          unless  => "/bin/egrep \"^${username}:\" ${_authUserFile} && /bin/grep \"${username}:$(/bin/echo '${clearPassword}' | ${apache::params::openssl_cmd} passwd -arp1 -salt $(/bin/egrep \"^${username}:\" ${_authUserFile} | cut -d'$' -f2))\" ${_authUserFile}",
           require => File[$_userFileLocation],
         }
       }
     }
 
     'absent': {
-      exec {"htpasswd -D ${_authUserFile} ${username}":
+      exec {"${apache::params::htpasswd_cmd} -D ${_authUserFile} ${username}":
         onlyif => "/bin/egrep -q '^${username}:' ${_authUserFile}",
         notify => Exec["delete ${_authUserFile} after remove ${username}"],
       }

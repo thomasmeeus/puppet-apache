@@ -1,0 +1,5 @@
+# file managed by puppet
+<VirtualHost<% @ports.each do |port| -%> <%= port %><% end -%>>
+    ServerName <%= @name %>
+    Redirect permanent / https://<%= @name %>
+</VirtualHost>

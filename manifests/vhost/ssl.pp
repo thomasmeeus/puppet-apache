@@ -183,7 +183,7 @@ define apache::vhost::ssl (
 
   $conf_content = $config_content ? {
     false           => $sslonly ? {
-      true          => template('apache/vhost-ssl.erb'),
+      true          => template('apache/vhost-redirect-http-https.erb', 'apache/vhost-ssl.erb'),
       default       => template('apache/vhost.erb', 'apache/vhost-ssl.erb'),
     },
     default         => $config_content,

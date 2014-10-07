@@ -76,6 +76,10 @@ class apache::params {
     /RedHat|CentOS/ => '/usr/bin/htpasswd',
     /Debian|Ubuntu/ => '/usr/bin/htpasswd',
   }
+  $htgroup_cmd = $::operatingsystem ? {
+    /RedHat|CentOS/ => '/usr/local/bin/htgroup',
+    /Debian|Ubuntu/ => '/usr/local/bin/htgroup',
+  }
   $openssl_cmd = $::operatingsystem ? {
     /RedHat|CentOS/ => '/usr/bin/openssl',
     /Debian|Ubuntu/ => '/usr/bin/openssl',

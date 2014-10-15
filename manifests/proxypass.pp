@@ -18,6 +18,8 @@ Parameters:
 - *filename*: basename of the file in which the directive(s) will be put.
   Useful in the case directive order matters: apache reads the files in conf/
   in alphabetical order.
+- *sslbackend*: define wether the module should enable proxy ssl backends
+- *proxy_config*: addition proxy configuration like ProxyPreserveHost, ..
 
 Requires:
 - Class["apache"]
@@ -26,11 +28,12 @@ Requires:
 Example usage:
 
   apache::proxypass { "proxy legacy dir to legacy server":
-    ensure   => present,
-    location => "/legacy/",
-    url      => "http://legacyserver.example.com",
-    params   => ["retry=5", "ttl=120"],
-    vhost    => "www.example.com",
+    ensure       => present,
+    location     => "/legacy/",
+    url          => "http://legacyserver.example.com",
+    params       => ["retry=5", "ttl=120"],
+    vhost        => "www.example.com",
+    proxy_config => ['ProxyPreserveHost On']
   }
 
 */
@@ -41,7 +44,8 @@ define apache::proxypass (
   $url='',
   $params=[],
   $filename='',
-  $sslbackend=false
+  $sslbackend=false,
+  $proxy_config=[]
 ) {
 
   $fname = regsubst($name, '\s', '_', 'G')

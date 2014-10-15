@@ -62,7 +62,7 @@ Parameters:
 - *sslports*: array specifying the ports on which the SSL vhost will be
   reachable. Defaults to "*:443".
 - *accesslog_format*: format string for access logs. Defaults to "combined".
-- *gen-ssl*: if set to "true", the generate-ssl-cert.sh script will create a
+- *genssl*: if set to "true", the generate-ssl-cert.sh script will create a
   new ssl certificate for your vhost.
 
 Requires:
@@ -117,6 +117,7 @@ define apache::vhost::ssl (
   $certchain=false,
   $certcn=false,
   $days='3650',
+  $genssl=true,
   $publish_csr=false,
   $sslonly=false,
   $ports=['*:80'],
@@ -228,14 +229,16 @@ define apache::vhost::ssl (
     # The certificate and the private key will be generated only if $name.crt
     # or $name.key are absent from the "ssl/" subdir.
     # The CSR will be re-generated each time this resource is triggered.
-    exec { "generate-ssl-cert-${name}":
-      command => "/usr/local/sbin/generate-ssl-cert.sh ${name} ${apache::params::root}/${name}/ssl/ssleay.cnf ${apache::params::root}/${name}/ssl/ ${days}",
-      creates => $csrfile,
-      notify  => Exec['apache-graceful'],
-      require => [
-        File["${apache::params::root}/${name}/ssl/ssleay.cnf"],
-        File['/usr/local/sbin/generate-ssl-cert.sh'],
-      ],
+    if ($genssl) {
+      exec { "generate-ssl-cert-${name}":
+        command => "/usr/local/sbin/generate-ssl-cert.sh ${name} ${apache::params::root}/${name}/ssl/ssleay.cnf ${apache::params::root}/${name}/ssl/ ${days}",
+        creates => $csrfile,
+        notify  => Exec['apache-graceful'],
+        require => [
+          File["${apache::params::root}/${name}/ssl/ssleay.cnf"],
+          File['/usr/local/sbin/generate-ssl-cert.sh'],
+        ],
+      }
     }
 
     # The virtualhost's certificate.
@@ -245,14 +248,26 @@ define apache::vhost::ssl (
       false   => undef,
       default => $cert,
     }
-    file { $certfile:
-      owner   => 'root',
-      group   => 'root',
-      mode    => '0640',
-      source  => $certificate,
-      seltype => 'cert_t',
-      notify  => Exec['apache-graceful'],
-      require => [File["${apache::params::root}/${name}/ssl"], Exec["generate-ssl-cert-${name}"]],
+    if ($genssl) {
+      file { $certfile:
+        owner   => 'root',
+        group   => 'root',
+        mode    => '0640',
+        source  => $certificate,
+        seltype => 'cert_t',
+        notify  => Exec['apache-graceful'],
+        require => [File["${apache::params::root}/${name}/ssl"], Exec["generate-ssl-cert-${name}"]],
+      }
+    } else {
+      file { $certfile:
+        owner   => 'root',
+        group   => 'root',
+        mode    => '0640',
+        source  => $certificate,
+        seltype => 'cert_t',
+        notify  => Exec['apache-graceful'],
+        require => [File["${apache::params::root}/${name}/ssl"]]
+      }
     }
 
     # The virtualhost's private key.
@@ -262,14 +277,26 @@ define apache::vhost::ssl (
       false   => undef,
       default => $certkey,
     }
-    file { $certkeyfile:
-      owner   => 'root',
-      group   => 'root',
-      mode    => '0600',
-      source  => $certificate_key,
-      seltype => 'cert_t',
-      notify  => Exec['apache-graceful'],
-      require => [File["${apache::params::root}/${name}/ssl"], Exec["generate-ssl-cert-${name}"]],
+    if ($genssl) {
+      file { $certkeyfile:
+        owner   => 'root',
+        group   => 'root',
+        mode    => '0600',
+        source  => $certificate_key,
+        seltype => 'cert_t',
+        notify  => Exec['apache-graceful'],
+        require => [File["${apache::params::root}/${name}/ssl"], Exec["generate-ssl-cert-${name}"]],
+      }
+    } else {
+      file { $certkeyfile:
+        owner   => 'root',
+        group   => 'root',
+        mode    => '0600',
+        source  => $certificate_key,
+        seltype => 'cert_t',
+        notify  => Exec['apache-graceful'],
+        require => [File["${apache::params::root}/${name}/ssl"]]
+      }
     }
 
     if $cacert != false {
@@ -329,13 +356,15 @@ define apache::vhost::ssl (
         false   => undef,
         default => "file://${csrfile}",
       }
-    file { "public CSR file for ${name}":
-      ensure  => $real_publish_csr,
-      path    => $real_csr_path,
-      source  => $real_csr_source,
-      mode    => '0640',
-      seltype => 'httpd_sys_content_t',
-      require => Exec["generate-ssl-cert-${name}"],
+    if ($genssl) {
+      file { "public CSR file for ${name}":
+        ensure  => $real_publish_csr,
+        path    => $real_csr_path,
+        source  => $real_csr_source,
+        mode    => '0640',
+        seltype => 'httpd_sys_content_t',
+        require => Exec["generate-ssl-cert-${name}"],
+      }
     }
 
   }

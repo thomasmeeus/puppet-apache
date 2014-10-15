@@ -10,3 +10,9 @@ SSLProxyEngine On
 
 ProxyPass <%= @location %> <%= @url -%> <%= @params.join(' ') %>
 ProxyPassReverse <%= @location %> <%= @url %>
+
+<% if @proxy_config %>
+<% @proxy_config.each do |config| -%>
+<%= config %>
+<% end -%>
+<% end %>

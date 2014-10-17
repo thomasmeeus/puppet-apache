@@ -84,12 +84,17 @@ SSLCryptoDevice builtin
 #   SSL Protocol support:
 # List the enable protocol levels with which clients will be able to
 # connect.  Disable SSLv2 access by default:
-SSLProtocol all -SSLv2
+SSLProtocol all -SSLv2 -SSLv3
 
 #   SSL Cipher Suite:
 # List the ciphers that the client is permitted to negotiate.
 # See the mod_ssl documentation for a complete list.
-SSLCipherSuite ALL:!ADH:!EXPORT:!SSLv2:RC4+RSA:+HIGH:+MEDIUM:+LOW
+SSLCipherSuite ECDH+AESGCM:DH+AESGCM:ECDH+AES256:DH+AES256:ECDH+AES128:DH+AES:ECDH+3DES:DH+3DES:RSA+AESGCM:RSA+AES:RSA+3DES:!aNULL:!MD5:!DSS
+
+# Option to prefer the server's cipher preference order:
+# When choosing a cipher during an SSLv3 or TLSv1 handshake, normally the client's preference is used. If this directive is enabled, the server's preference will be used instead.
+
+SSLHonorCipherOrder on
 
 #   Server Certificate:
 # Point SSLCertificateFile at a PEM encoded certificate.  If

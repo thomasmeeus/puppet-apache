@@ -6,7 +6,7 @@ define apache::vhost (
   $conf=false,
   $readme=false,
   $docroot=false,
-  $cgibin=true,
+  $cgibin=false,
   $user='',
   $admin='',
   $group='',

@@ -47,15 +47,6 @@ describe 'apache::vhost' do
           :source  => nil
         ) }
 
-        it { should contain_file("#{vhost} cgi-bin directory").with(
-          :ensure  => 'directory',
-          :path    => "#{VARS[os]['root']}/#{vhost}/cgi-bin/",
-          :owner   => VARS[os]['user'],
-          :group   => VARS[os]['group'],
-          :mode    => '2570',
-          :seltype => VARS[os]['script_seltype']
-        ) }
-
         it { should contain_file("#{VARS[os]['root']}/#{vhost}/logs").with(
           :ensure  => 'directory',
           :owner   => 'apache',

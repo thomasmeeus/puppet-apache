@@ -65,8 +65,8 @@ class apache::params {
 
   $logrotate_paths = "${apache::params::root}/*/logs/*.log ${apache::params::log}/*log"
   $httpd_pid_file = $::operatingsystem ? {
-    /RedHat|CentOS/ => '/var/run/httpd.pid',
-    /Debian|Ubuntu/ => '/var/run/apache2.pid',
+    /RedHat|CentOS/ => '/etc/httpd/run/httpd.pid',
+    /Debian|Ubuntu/ => '/etc/httpd/run/httpd.pid',
   }
   $httpd_reload_cmd = $::operatingsystem ? {
     /RedHat|CentOS/ => '/sbin/service httpd graceful > /dev/null 2> /dev/null || true',

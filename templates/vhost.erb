@@ -10,8 +10,10 @@
 
   LogLevel warn
 
+  SetEnvIf X-Forwarded-For "^.*\..*\..*\..*" forwarded
+  CustomLog <%= @wwwroot %>/<%= @name %>/logs/access.log <%= @accesslog_format %> env=!forwarded
+  CustomLog <%= @wwwroot %>/<%= @name %>/logs/access.log proxy env=forwarded
   ErrorLog <%= @wwwroot %>/<%= @name %>/logs/error.log
-  CustomLog <%= @wwwroot %>/<%= @name %>/logs/access.log "<%= @accesslog_format %>"
 
   Include <%= @wwwroot %>/<%= @name%>/conf/*.conf
 

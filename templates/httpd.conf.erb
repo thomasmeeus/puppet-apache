@@ -996,4 +996,14 @@ BrowserMatch "^Dreamweaver-WebDAV-SCM1" redirect-carefully
 #    CustomLog logs/dummy-host.example.com-access_log common
 #</VirtualHost>
 
+### Section 4: Security measures
+#
+# HTTP TRACE/TRACK Cross-Site Scripting Attack
+# CVE-2004-2320 and CVE-2005-3398
+<IfModule mod_rewrite.c>
+  RewriteEngine on
+  RewriteCond %{REQUEST_METHOD} ^(TRACE|TRACK)
+  RewriteRule .* - [F]
+</IfModule>
+
 Include sites-enabled/

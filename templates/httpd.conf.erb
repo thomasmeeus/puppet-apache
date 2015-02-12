@@ -1000,8 +1000,10 @@ BrowserMatch "^Dreamweaver-WebDAV-SCM1" redirect-carefully
 #
 # HTTP TRACE/TRACK Cross-Site Scripting Attack
 # CVE-2004-2320 and CVE-2005-3398
-RewriteEngine on
-RewriteCond %{REQUEST_METHOD} ^(TRACE|TRACK)
-RewriteRule .* - [F]
+<IfModule mod_rewrite.c>
+  RewriteEngine on
+  RewriteCond %{REQUEST_METHOD} ^(TRACE|TRACK)
+  RewriteRule .* - [F]
+</IfModule>
 
 Include sites-enabled/

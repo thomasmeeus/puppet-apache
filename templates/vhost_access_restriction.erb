@@ -1,0 +1,10 @@
+# This file is managed by Puppet
+
+  <Directory <%= @folder %>>
+    Options <%= @options %>
+    AllowOverride <%= @allow_override %>
+    Order <%= @order %>
+    <% if @deny_from.any? %>Deny from <%= @deny_from %><% end %>
+    <% if @allow_from .any? %>Allow from <% @allow_from.each do |ip| -%> <%= ip %><% end -%><% end %>
+
+  </Directory>

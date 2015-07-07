@@ -43,7 +43,7 @@ define apache::vhost_access_restriction (
   $folder,
   $options='FollowSymLinks',
   $order='Deny,Allow',
-  $deny_from = [],
+  $deny_from = ['all'],
   $allow_from = [],
 ) {
 
@@ -51,10 +51,9 @@ define apache::vhost_access_restriction (
 
 
   file { "access restriction on ${name} on ${vhost}":
-    #file { "access restictions ${name} on ${vhost}":
     ensure  => $ensure,
     content => template('apache/vhost_access_restriction.erb'),
-    path    => "${apache::params::conf}/conf.d/00-default-${vhost}.conf",
+    path    => "${apache::params::root}/${vhost}/conf/00-vhost_access_restriction-${name}.conf",
     notify  => Exec['apache-graceful'],
     require => Apache::Vhost[$vhost],
   }

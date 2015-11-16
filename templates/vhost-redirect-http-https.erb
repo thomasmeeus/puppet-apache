@@ -1,6 +1,11 @@
 # file managed by puppet
 <VirtualHost<% @ports.each do |port| -%> <%= port %><% end -%>>
     ServerName <%= @name %>
+    <% if @aliases -%>
+    <% @aliases.each do |serveralias| -%>
+    ServerAlias <%= serveralias %>
+    <% end -%>
+    <% end -%>
     RewriteEngine On
     RewriteCond %{HTTPS} off
     RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI} 

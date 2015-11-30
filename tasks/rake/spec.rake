@@ -1,5 +1,4 @@
 require 'rspec/core/rake_task'
-require 'yaml'
 require File.expand_path('../../env', __FILE__)
 
 desc "Run puppet module RSpec tests"

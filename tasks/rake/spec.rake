@@ -81,7 +81,7 @@ task :spec_clean do
   end
 
   fixtures("symlinks").each do |source, target|
-    FileUtils::rm(target)
+    FileUtils::rm_rf(target)
   end
   site = "spec/fixtures/manifests/site.pp"
   if File::exists?(site) and ! File.size?(site)

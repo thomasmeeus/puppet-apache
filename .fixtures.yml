@@ -1,3 +1,10 @@
 fixtures:
   symlinks:
-    "apache": "#{source_dir}"
+    apache: "#{source_dir}"
+  repositories: 
+    concat:
+        repo: 'https://github.com/cegeka/puppet-concat.git'
+    stdlib:
+        repo: 'https://github.com/cegeka/puppet-stdlib.git'
+    collectd:
+        repo: 'https://github.com/cegeka/puppet-collectd.git'

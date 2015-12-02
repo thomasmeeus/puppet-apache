@@ -15,7 +15,7 @@ describe 'apache::vhost' do
         include apache
         apache::vhost { 'www.example.com':
           ensure    => present,
-          require => Package['httpd'],
+          require   => Package['httpd'],
         }
       EOS
 

@@ -7,12 +7,13 @@ describe 'apache::vhost_access_restriction' do
       pp = <<-EOS
         include apache
         apache::vhost { 'www.example.com':
-          ensure    => present,
+          ensure => present,
         }
         apache::vhost_access_restriction { 'www.example.com':
           vhost      => 'www.example.com',
           folder     => '/var/www/vhosts/www.example.com/htdocs',
           allow_from => '127.0.0.1',
+          require    => Package['httpd'],
         }
       EOS
 

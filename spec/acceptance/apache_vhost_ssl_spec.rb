@@ -1,11 +1,11 @@
 require 'spec_helper_acceptance'
 
-describe 'apache' do
+describe 'apache::vhost::ssl' do
 
-	describe 'running puppet code' do
+  describe 'running puppet code' do
     it 'should work with no errors' do
       pp = <<-EOS
-        include apache 
+        include apache::ssl
       EOS
 
       # Run it twice and test for idempotency
@@ -13,13 +13,14 @@ describe 'apache' do
       apply_manifest(pp, :catch_changes => true)
     end
 
-		describe port(80) do
+    describe port(443) do
       it { is_expected.to be_listening }
     end
-
-		describe service('httpd') do
-      it { is_expected.to be_enabled }
-      it { is_expected.to be_running }
+    
+    describe file '/usr/local/sbin/generate-ssl-cert.sh' do
+      it { is_expected.to be_file }
+      its(:content) { should match /openssl/ }
     end
-	end
+
+  end
 end

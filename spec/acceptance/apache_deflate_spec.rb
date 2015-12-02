@@ -2,21 +2,18 @@ require 'spec_helper_acceptance'
 
 case fact('osfamily')
 when 'RedHat'
-  vhostd = '/etc/httpd/sites-enabled'
+  confd = '/etc/httpd/conf.d'
 when 'Debian'
-  vhostd = '/etc/apache2/sites-enabled'
+  confd = '/etc/apache2/conf.d'
 end
 
-describe 'apache::vhost' do
+describe 'apache::deflate' do
 
   describe 'running puppet code' do
     it 'should work with no errors' do
       pp = <<-EOS
         include apache
-        apache::vhost { 'www.example.com':
-          ensure    => present,
-          require => Package['httpd'],
-        }
+        include apache::deflate
       EOS
 
       # Run it twice and test for idempotency
@@ -24,9 +21,9 @@ describe 'apache::vhost' do
       apply_manifest(pp, :catch_changes => true)
     end
 
-    describe file "#{vhostd}/www.example.com" do
+    describe file "#{confd}/deflate.conf" do
       it { is_expected.to be_file }
-      its(:content) { should match /ServerName www.example.com/ }
+      its(:content) { should match /mod_deflate.c/ }
     end
   end
 end

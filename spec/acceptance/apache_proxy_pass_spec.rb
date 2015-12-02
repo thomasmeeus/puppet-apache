@@ -1,6 +1,6 @@
 require 'spec_helper_acceptance'
 
-describe 'apache::proxypass' do
+describe 'apache::proxy_pass' do
 
   describe 'running puppet code' do
     it 'should work with no errors' do
@@ -15,7 +15,8 @@ describe 'apache::proxypass' do
           url          => "http://legacyserver.example.com",
           params       => ["retry=5", "ttl=120"],
           vhost        => "www.example.com",
-          proxy_config => ['ProxyPreserveHost On']
+          proxy_config => ['ProxyPreserveHost On'],
+          require => Package['httpd'],
         }
       EOS
 

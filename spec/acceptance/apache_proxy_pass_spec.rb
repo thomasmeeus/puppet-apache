@@ -7,7 +7,7 @@ describe 'apache::proxy_pass' do
       pp = <<-EOS
         include apache
         apache::vhost { 'www.example.com':
-          ensure    => present,
+          ensure => present,
         }
         apache::proxypass { "proxy legacy dir to legacy server":
           ensure       => present,
@@ -16,7 +16,7 @@ describe 'apache::proxy_pass' do
           params       => ["retry=5", "ttl=120"],
           vhost        => "www.example.com",
           proxy_config => ['ProxyPreserveHost On'],
-          require => Package['httpd'],
+          require      => Package['httpd'],
         }
       EOS
 

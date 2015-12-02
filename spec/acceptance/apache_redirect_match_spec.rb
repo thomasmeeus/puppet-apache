@@ -7,7 +7,7 @@ describe 'apache::redirectmatch' do
       pp = <<-EOS
         include apache
         apache::vhost { 'www.example.com':
-          ensure    => present,
+          ensure => present,
         }
         apache::redirectmatch { "example":
           regex => "^/(foo|bar)",

@@ -1,1 +1,7 @@
 /.project
+log
+Gemfile.lock
+.DS_Store
+spec/fixtures/
+.vagrant/
+junit/

@@ -16,7 +16,7 @@ task :style do
   linter.configuration.log_format =
       '%{path}:%{linenumber}:%{check}:%{KIND}:%{message}'
 
-	lintrc = "#{MODULE_ROOT_DIR}/.puppet-lintrc"
+ lintrc = "#{MODULE_ROOT_DIR}/.puppet-lintrc"
   if File.file?(lintrc)
     File.read(lintrc).each_line do |line|
       check = line.sub(/--no-([a-zA-Z0-9_]*)-check/, '\1').chomp

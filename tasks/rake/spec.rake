@@ -1,5 +1,4 @@
 require 'rspec/core/rake_task'
-
 require File.expand_path('../../env', __FILE__)
 
 desc "Run puppet module RSpec tests"
@@ -81,7 +80,7 @@ task :spec_clean do
   end
 
   fixtures("symlinks").each do |source, target|
-    FileUtils::rm(target)
+    FileUtils::rm_rf(target)
   end
   site = "spec/fixtures/manifests/site.pp"
   if File::exists?(site) and ! File.size?(site)

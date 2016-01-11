@@ -1,5 +1,7 @@
 require 'fpm'
 require 'pp'
+require 'fpm/program'
+gem 'fpm', '<=0.3.11'
 
 $:.unshift(File.join(File.dirname(__FILE__), '..'))
 require 'version_helper'
@@ -52,7 +54,7 @@ class BasePackager
     tmpdir = Dir.mktmpdir
     Dir.chdir tmpdir
     FileUtils.mkpath destination_folder
-    packagebuild = FPM::Command.new("fpm")
+    packagebuild = FPM::Program.new
     ret = packagebuild.run(arguments)
     FileUtils.mv("#{tmpdir}/#{destination_file}","#{destination_folder}/#{destination_file}")
     FileUtils.remove_entry_secure(tmpdir)

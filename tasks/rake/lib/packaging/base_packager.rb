@@ -1,7 +1,10 @@
 require 'fpm'
 require 'pp'
-require 'fpm/program'
-gem 'fpm', '<=0.3.11'
+
+if RUBY_VERSION <= "1.8.7"
+  require 'fpm/program'
+  gem 'fpm', '<=0.3.11'
+end
 
 $:.unshift(File.join(File.dirname(__FILE__), '..'))
 require 'version_helper'

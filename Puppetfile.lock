@@ -1,0 +1,26 @@
+GIT
+  remote: https://github.com/cegeka/puppet-collectd
+  ref: master
+  sha: 0b1ac0c69c473fc6e6cbc7c15143f082b9cdac52
+  specs:
+    collectd (0.0.1)
+
+GIT
+  remote: https://github.com/cegeka/puppet-concat
+  ref: master
+  sha: a3c226040c1314bc5b38f30f16e6c9d86f889411
+  specs:
+    concat (0.0.2)
+
+GIT
+  remote: https://github.com/cegeka/puppet-stdlib
+  ref: master
+  sha: 2d9014ead749e9b286c2157c511182e9b3b09851
+  specs:
+    stdlib (0.0.1)
+
+DEPENDENCIES
+  collectd (>= 0)
+  concat (>= 0)
+  stdlib (>= 0)
+

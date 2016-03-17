@@ -89,7 +89,7 @@ SSLProtocol all -SSLv2 -SSLv3
 #   SSL Cipher Suite:
 # List the ciphers that the client is permitted to negotiate.
 # See the mod_ssl documentation for a complete list.
-SSLCipherSuite ECDH+AESGCM:DH+AESGCM:ECDH+AES256:DH+AES256:ECDH+AES128:DH+AES:ECDH+3DES:DH+3DES:RSA+AESGCM:RSA+AES:RSA+3DES:!aNULL:!MD5:!DSS
+SSLCipherSuite ECDHE-RSA-AES128-SHA256:AES128-GCM-SHA256:HIGH:!MD5:!aNULL:@STRENGTH 
 
 # Option to prefer the server's cipher preference order:
 # When choosing a cipher during an SSLv3 or TLSv1 handshake, normally the client's preference is used. If this directive is enabled, the server's preference will be used instead.

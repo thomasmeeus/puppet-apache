@@ -10,7 +10,6 @@ It shouldn't be necessary to directly include this class.
 class apache::base {
 
   include apache::params
-  include concat::setup
 
   $access_log = $apache::params::access_log
   $error_log  = $apache::params::error_log

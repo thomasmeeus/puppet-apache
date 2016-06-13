@@ -2,10 +2,8 @@
 log/
 Gemfile.lock
 .DS_Store
-spec/fixtures/
 .vagrant/
 junit/
 librarian/
 tmp/
-spec/fixtures
 Puppetfile.lock

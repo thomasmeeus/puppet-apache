@@ -13,7 +13,8 @@ define apache::vhost (
   $mode=2570,
   $aliases=[],
   $ports=['*:80'],
-  $accesslog_format='combined'
+  $accesslog_format='combined',
+  $enablehsts=false
 ) {
 
   include apache::params

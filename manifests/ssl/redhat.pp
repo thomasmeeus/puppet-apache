@@ -31,6 +31,17 @@ class apache::ssl::redhat {
         require => File['/etc/httpd/mods-available'],
       }
     }
+    /7.*/: {
+      file {'/etc/httpd/mods-available/ssl.load':
+        ensure  => present,
+        content => template('apache/ssl.load.rhel7.erb'),
+        mode    => '0644',
+        owner   => 'root',
+        group   => 'root',
+        seltype => 'httpd_config_t',
+        require => File['/etc/httpd/mods-available'],
+      }
+    }
     default: {}
   }
 }

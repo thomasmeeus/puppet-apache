@@ -55,6 +55,7 @@ class apache::redhat {
   $real_module_source = $::operatingsystemrelease ? {
     /5.*/ => 'puppet:///modules/apache/etc/httpd/mods-available/redhat5/',
     /6.*/ => 'puppet:///modules/apache/etc/httpd/mods-available/redhat6/',
+    /7.*/ => 'puppet:///modules/apache/etc/httpd/mods-available/redhat7/',
   }
 
   file { "${apache::params::conf}/mods-available":

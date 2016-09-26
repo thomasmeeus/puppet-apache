@@ -5,6 +5,12 @@ class apache::ssl::redhat {
     ensure => installed,
   }
 
+  file {'/etc/httpd/ssl':
+    ensure  => directory,
+    mode    => '0440',
+    require => Package['mod_ssl']
+  }
+
   file {'/etc/httpd/conf.d/ssl.conf':
     ensure  => absent,
     require => Package['mod_ssl'],

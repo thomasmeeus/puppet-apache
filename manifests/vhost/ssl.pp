@@ -122,7 +122,8 @@ define apache::vhost::ssl (
   $sslonly=false,
   $ports=['*:80'],
   $sslports=['*:443'],
-  $accesslog_format='combined'
+  $accesslog_format='combined',
+  $enablehsts=false
 ) {
 
   # these 2 values are required to generate a valid SSL certificate.
@@ -205,6 +206,7 @@ define apache::vhost::ssl (
     mode              => $mode,
     ports             => $ports,
     accesslog_format  => $accesslog_format,
+    enablehsts        => $enablehsts,
   }
 
   if $ensure == 'present' {
@@ -231,10 +233,11 @@ define apache::vhost::ssl (
     # The CSR will be re-generated each time this resource is triggered.
     if ($genssl) {
       exec { "generate-ssl-cert-${name}":
-        command => "/usr/local/sbin/generate-ssl-cert.sh ${name} ${apache::params::root}/${name}/ssl/ssleay.cnf ${apache::params::root}/${name}/ssl/ ${days}",
-        creates => $csrfile,
-        notify  => Exec['apache-graceful'],
-        require => [
+        environment => ["HOME=."],
+        command     => "/usr/local/sbin/generate-ssl-cert.sh ${name} ${apache::params::root}/${name}/ssl/ssleay.cnf ${apache::params::root}/${name}/ssl/ ${days}",
+        creates     => $csrfile,
+        notify      => Exec['apache-graceful'],
+        require     => [
           File["${apache::params::root}/${name}/ssl/ssleay.cnf"],
           File['/usr/local/sbin/generate-ssl-cert.sh'],
         ],

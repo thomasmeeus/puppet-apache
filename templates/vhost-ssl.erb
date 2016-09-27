@@ -46,6 +46,13 @@
 </IfModule>
 <% end -%>
 
+<% if @operatingsystemmajrelease.to_i >= 7 %>
+  <Directory "<%= @documentroot %>">
+    AllowOverride All
+    Require all granted
+  </Directory>
+<% end %>
+
   ServerSignature Off
 
 </VirtualHost>

@@ -15,7 +15,11 @@
   CustomLog <%= @wwwroot %>/<%= @name %>/logs/access.log proxy env=forwarded
   ErrorLog <%= @wwwroot %>/<%= @name %>/logs/error.log
 
+<% if @operatingsystemmajrelease < 7 %>
+  Include <%= @wwwroot %>/<%= @name%>/conf/*.conf
+<% else %>
   IncludeOptional <%= @wwwroot %>/<%= @name%>/conf/*.conf
+<% end %>
 
 <% if @cgipath -%>
   ScriptAlias /cgi-bin/ <%= @cgipath %>

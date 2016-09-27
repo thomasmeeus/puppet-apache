@@ -15,7 +15,7 @@
   CustomLog <%= @wwwroot %>/<%= @name %>/logs/access.log proxy env=forwarded
   ErrorLog <%= @wwwroot %>/<%= @name %>/logs/error.log
 
-<% if @operatingsystemmajrelease < 7 %>
+<% if @operatingsystemmajrelease.to_i < 7 %>
   Include <%= @wwwroot %>/<%= @name%>/conf/*.conf
 <% else %>
   IncludeOptional <%= @wwwroot %>/<%= @name%>/conf/*.conf

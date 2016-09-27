@@ -83,13 +83,22 @@ class apache::base {
   }
 
   apache::listen { $apache::params::default_port:
-    ensure => present
+      ensure => present
   }
-  apache::namevhost { "*:${apache::params::default_port}":
-    ensure => present
+  
+  if ($::operatingsystemmajrelease < 7) {
+    apache::namevhost { "*:${apache::params::default_port}":
+      ensure => present
+    }
   }
 
-  apache::module {['alias', 'auth_basic', 'authn_file', 'authz_default', 'authz_groupfile', 'authz_host', 'authz_user', 'autoindex', 'dir', 'env', 'mime', 'negotiation', 'rewrite', 'setenvif', 'status', 'cgi']:
+  $real_apache_modules = $::operatingsystemrelease ? {
+    /5.*/ => ['alias', 'auth_basic', 'authn_file', 'authz_default', 'authz_groupfile', 'authz_host', 'authz_user', 'autoindex', 'dir', 'env', 'mime', 'negotiation', 'rewrite', 'setenvif', 'status', 'cgi'],
+    /6.*/ => ['alias', 'auth_basic', 'authn_file', 'authz_default', 'authz_groupfile', 'authz_host', 'authz_user', 'autoindex', 'dir', 'env', 'mime', 'negotiation', 'rewrite', 'setenvif', 'status', 'cgi'],
+    /7.*/ => ['alias', 'auth_basic', 'authn_file', 'authz_core', 'authz_groupfile', 'authz_host', 'authz_user', 'autoindex', 'dir', 'env', 'mime', 'negotiation', 'rewrite', 'setenvif', 'status', 'mpm_prefork', 'unixd', 'access_compat', 'socache_shmcb', 'systemd']
+  }
+
+  apache::module { $real_apache_modules :
     ensure => present,
     notify => Exec['apache-graceful'],
   }

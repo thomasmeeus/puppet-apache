@@ -1,8 +1,15 @@
 #
-# When we also provide SSL we have to listen to the
-# the HTTPS port in addition.
+# This is the Apache server configuration file providing SSL support.
+# It contains the configuration directives to instruct the server how to
+# serve pages over an https connection. For detailing information about these
+# directives see <URL:http://httpd.apache.org/docs/2.4/mod/mod_ssl.html>
 #
-Listen 443 https
+# Do NOT simply read the instructions in here without understanding
+# what they do.  They're here only as hints or reminders.  If you are unsure
+# consult the online docs. You have been warned.
+#
+
+LoadModule ssl_module modules/mod_ssl.so
 
 ##
 ##  SSL Global Context

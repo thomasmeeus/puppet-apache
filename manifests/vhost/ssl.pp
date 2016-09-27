@@ -190,6 +190,7 @@ define apache::vhost::ssl (
     },
     default         => $config_content,
   }
+
   # call parent definition to actually do the virtualhost setup.
   apache::vhost {$name:
     ensure            => $ensure,

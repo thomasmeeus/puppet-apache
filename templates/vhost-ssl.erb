@@ -15,7 +15,11 @@
   CustomLog <%= @wwwroot %>/<%= @name %>/logs/access.log proxy env=forwarded
   ErrorLog <%= @wwwroot %>/<%= @name %>/logs/error.log
 
+<% if @operatingsystemmajrelease.to_i < 7 %>
   Include <%= @wwwroot %>/<%= @name%>/conf/*.conf
+<% else %>
+  IncludeOptional <%= @wwwroot %>/<%= @name%>/conf/*.conf
+<% end %>
 
   SSLEngine On
   SSLCertificateFile <%= @certfile %>
@@ -41,6 +45,13 @@
   Header always set Strict-Transport-Security "max-age=31536000"
 </IfModule>
 <% end -%>
+
+<% if @operatingsystemmajrelease.to_i >= 7 %>
+  <Directory "<%= @documentroot %>">
+    AllowOverride All
+    Require all granted
+  </Directory>
+<% end %>
 
   ServerSignature Off
 

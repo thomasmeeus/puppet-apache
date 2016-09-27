@@ -41,9 +41,15 @@ class apache::redhat {
     require => Package['apache'],
   }
 
+  $real_httpd_source = $::operatingsystemrelease ? {
+    /5.*/ => 'apache/httpd-2.2.conf.erb',
+    /6.*/ => 'apache/httpd-2.2.conf.erb',
+    /7.*/ => 'apache/httpd-2.4.conf.erb'
+  }
+
   file { "${apache::params::conf}/conf/httpd.conf":
     ensure  => present,
-    content => template('apache/httpd.conf.erb'),
+    content => template($real_httpd_source),
     seltype => 'httpd_config_t',
     notify  => Service['apache'],
     require => Package['apache'],
@@ -55,6 +61,7 @@ class apache::redhat {
   $real_module_source = $::operatingsystemrelease ? {
     /5.*/ => 'puppet:///modules/apache/etc/httpd/mods-available/redhat5/',
     /6.*/ => 'puppet:///modules/apache/etc/httpd/mods-available/redhat6/',
+    /7.*/ => 'puppet:///modules/apache/etc/httpd/mods-available/redhat7/',
   }
 
   file { "${apache::params::conf}/mods-available":

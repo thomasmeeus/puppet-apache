@@ -1,4 +1,4 @@
-define apache::redhat::selinux() {
+define cegeka_apache::redhat::selinux() {
 
   case $name {
 

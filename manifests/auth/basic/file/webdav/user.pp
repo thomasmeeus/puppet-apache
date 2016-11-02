@@ -1,4 +1,4 @@
-define apache::auth::basic::file::webdav::user (
+define cegeka_apache::auth::basic::file::webdav::user (
   $vhost,
   $ensure=present,
   $authname=false,
@@ -12,16 +12,16 @@ define apache::auth::basic::file::webdav::user (
 
   $fname = regsubst($name, '\s', '_', 'G')
 
-  include apache::params
+  include cegeka_apache::params
 
-  if !defined(Apache::Module['authn_file']) {
-    apache::module {'authn_file': }
+  if !defined(Cegeka_apache::Module['authn_file']) {
+    cegeka_apache::module {'authn_file': }
   }
 
   if $authUserFile {
     $_authUserFile = $authUserFile
   } else {
-    $_authUserFile = "${apache::params::root}/${vhost}/private/htpasswd"
+    $_authUserFile = "${cegeka_apache::params::root}/${vhost}/private/htpasswd"
   }
 
   if $authname {
@@ -41,9 +41,9 @@ define apache::auth::basic::file::webdav::user (
     'CentOS' => 'httpd_config_t',
     default  => undef,
   }
-  file { "${apache::params::root}/${vhost}/conf/auth-basic-file-webdav-${fname}.conf":
+  file { "${cegeka_apache::params::root}/${vhost}/conf/auth-basic-file-webdav-${fname}.conf":
     ensure     => $ensure,
-    content    => template('apache/auth-basic-file-webdav-user.erb'),
+    content    => template('cegeka_apache/auth-basic-file-webdav-user.erb'),
     seltype    => $confseltype,
     notify     => Exec['apache-graceful'],
   }

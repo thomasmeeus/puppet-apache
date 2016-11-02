@@ -1,8 +1,8 @@
-class apache::webdav::ssl {
-  include apache::ssl
+class cegeka_apache::webdav::ssl {
+  include cegeka_apache::ssl
 
   case $::operatingsystem {
-    Debian,Ubuntu:  { include apache::webdav::ssl::debian}
+    Debian,Ubuntu:  { include cegeka_apache::webdav::ssl::debian}
     default: { fail "Unsupported operatingsystem ${::operatingsystem}" }
   }
 }

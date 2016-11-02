@@ -1,6 +1,6 @@
-class apache::redhat {
-  include apache::base
-  include apache::params
+class cegeka_apache::redhat {
+  include cegeka_apache::base
+  include cegeka_apache::params
 
   file {[
     '/usr/local/sbin/a2ensite',
@@ -12,59 +12,59 @@ class apache::redhat {
     mode   => '0755',
     owner  => 'root',
     group  => 'root',
-    source => 'puppet:///modules/apache/usr/local/sbin/a2X.redhat',
+    source => 'puppet:///modules/cegeka_apache/usr/local/sbin/a2X.redhat',
   }
 
-  $httpd_mpm = $apache::apache_mpm_type ? {
+  $httpd_mpm = $cegeka_apache::apache_mpm_type ? {
     ''         => 'httpd', # default MPM
     'pre-fork' => 'httpd',
     'prefork'  => 'httpd',
-    default    => "httpd.${apache::apache_mpm_type}",
+    default    => "httpd.${cegeka_apache::apache_mpm_type}",
   }
 
   augeas { "select httpd mpm ${httpd_mpm}":
     changes => "set /files/etc/sysconfig/httpd/HTTPD /usr/sbin/${httpd_mpm}",
-    require => Package['apache'],
-    notify  => Service['apache'],
+    require => Package['cegeka_apache'],
+    notify  => Service['cegeka_apache'],
   }
 
   file { [
-      "${apache::params::conf}/sites-available",
-      "${apache::params::conf}/sites-enabled",
-      "${apache::params::conf}/mods-enabled"
+      "${cegeka_apache::params::conf}/sites-available",
+      "${cegeka_apache::params::conf}/sites-enabled",
+      "${cegeka_apache::params::conf}/mods-enabled"
     ]:
     ensure  => directory,
     mode    => '0755',
     owner   => 'root',
     group   => 'root',
     seltype => 'httpd_config_t',
-    require => Package['apache'],
+    require => Package['cegeka_apache'],
   }
 
   $real_httpd_source = $::operatingsystemrelease ? {
-    /5.*/ => 'apache/httpd-2.2.conf.erb',
-    /6.*/ => 'apache/httpd-2.2.conf.erb',
-    /7.*/ => 'apache/httpd-2.4.conf.erb'
+    /5.*/ => 'cegeka_apache/httpd-2.2.conf.erb',
+    /6.*/ => 'cegeka_apache/httpd-2.2.conf.erb',
+    /7.*/ => 'cegeka_apache/httpd-2.4.conf.erb'
   }
 
-  file { "${apache::params::conf}/conf/httpd.conf":
+  file { "${cegeka_apache::params::conf}/conf/httpd.conf":
     ensure  => present,
     content => template($real_httpd_source),
     seltype => 'httpd_config_t',
-    notify  => Service['apache'],
-    require => Package['apache'],
+    notify  => Service['cegeka_apache'],
+    require => Package['cegeka_apache'],
   }
 
   # the following command was used to generate the content of the directory:
   # egrep '(^|#)LoadModule' /etc/httpd/conf/httpd.conf | sed -r 's|#?(.+ (.+)_module .+)|echo "\1" > mods-available/redhat5/\2.load|' | sh
   # ssl.load was then changed to a template (see apache-ssl-redhat.pp)
   $real_module_source = $::operatingsystemrelease ? {
-    /5.*/ => 'puppet:///modules/apache/etc/httpd/mods-available/redhat5/',
-    /6.*/ => 'puppet:///modules/apache/etc/httpd/mods-available/redhat6/',
-    /7.*/ => 'puppet:///modules/apache/etc/httpd/mods-available/redhat7/',
+    /5.*/ => 'puppet:///modules/cegeka_apache/etc/httpd/mods-available/redhat5/',
+    /6.*/ => 'puppet:///modules/cegeka_apache/etc/httpd/mods-available/redhat6/',
+    /7.*/ => 'puppet:///modules/cegeka_apache/etc/httpd/mods-available/redhat7/',
   }
 
-  file { "${apache::params::conf}/mods-available":
+  file { "${cegeka_apache::params::conf}/mods-available":
     ensure  => directory,
     source  => $real_module_source,
     recurse => true,
@@ -72,11 +72,11 @@ class apache::redhat {
     owner   => 'root',
     group   => 'root',
     seltype => 'httpd_config_t',
-    require => Package['apache'],
+    require => Package['cegeka_apache'],
   }
 
   # this module is statically compiled on debian and must be enabled here
-  apache::module {'log_config':
+  cegeka_apache::module {'log_config':
     ensure => present,
     notify => Exec['apache-graceful'],
   }
@@ -86,14 +86,14 @@ class apache::redhat {
     ensure  => absent,
     force   => true,
     recurse => true,
-    require => Package['apache'],
+    require => Package['cegeka_apache'],
   }
 
   # no idea why redhat choose to put this file there. apache fails if it's
   # present and mod_proxy isn't...
-  file { "${apache::params::conf}/conf.d/proxy_ajp.conf":
+  file { "${cegeka_apache::params::conf}/conf.d/proxy_ajp.conf":
     ensure  => absent,
-    require => Package['apache'],
+    require => Package['cegeka_apache'],
     notify  => Exec['apache-graceful'],
   }
 

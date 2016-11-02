@@ -1,5 +1,5 @@
 # file managed by puppet
-<%= scope.lookupvar('apache::params::logrotate_paths') %> {
+<%= scope.lookupvar('cegeka_apache::params::logrotate_paths') %> {
     daily
     missingok
     rotate 7
@@ -9,13 +9,13 @@
     create 644 apache apache
     sharedscripts
     prerotate
-        if [ <%= scope.lookupvar('apache::params::awstats_condition') %> ]; then
-            <%= scope.lookupvar('apache::params::awstats_command') %>
+        if [ <%= scope.lookupvar('cegeka_apache::params::awstats_condition') %> ]; then
+            <%= scope.lookupvar('cegeka_apache::params::awstats_command') %>
         fi
     endscript
     postrotate
-        if [ -f <%= scope.lookupvar('apache::params::httpd_pid_file') %> ]; then
-            <%= scope.lookupvar('apache::params::httpd_reload_cmd') %>
+        if [ -f <%= scope.lookupvar('cegeka_apache::params::httpd_pid_file') %> ]; then
+            <%= scope.lookupvar('cegeka_apache::params::httpd_reload_cmd') %>
         fi
     endscript
 }

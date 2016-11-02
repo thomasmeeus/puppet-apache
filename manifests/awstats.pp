@@ -1,4 +1,4 @@
-class apache::awstats {
+class cegeka_apache::awstats {
 
   package { 'awstats':
     ensure => installed
@@ -7,7 +7,7 @@ class apache::awstats {
   # ensure non-managed files are purged from directory
   file {'/etc/awstats':
     ensure  => directory,
-    source  => 'puppet:///modules/apache/etc/awstats',
+    source  => 'puppet:///modules/cegeka_apache/etc/awstats',
     mode    => '0755',
     purge   => true,
     recurse => true,

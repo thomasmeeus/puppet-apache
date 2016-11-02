@@ -1,15 +1,15 @@
 require 'spec_helper_acceptance'
 
-describe 'apache::vhost_access_restriction' do
+describe 'cegeka_apache::vhost_access_restriction' do
 
   describe 'running puppet code' do
     it 'should work with no errors' do
       pp = <<-EOS
-        include apache
-        apache::vhost { 'www.example.com':
+        include cegeka_apache
+        cegeka_apache::vhost { 'www.example.com':
           ensure => present,
         }
-        apache::vhost_access_restriction { 'www.example.com':
+        cegeka_apache::vhost_access_restriction { 'www.example.com':
           vhost      => 'www.example.com',
           folder     => '/var/www/vhosts/www.example.com/htdocs',
           allow_from => '127.0.0.1',

@@ -1,5 +1,5 @@
 /*
-== Class: apache::collectd
+== Class: cegeka_apache::collectd
 
 Configures collectd's apache plugin. This gathers data from apache's
 server-status and stores it in rrd files, from which you can make nice
@@ -12,18 +12,18 @@ Requires:
 - Class['collectd']
 
 Usage:
-  include apache
+  include cegeka_apache
   include collectd
-  include apache::collectd
+  include cegeka_apache::collectd
 
 */
-class apache::collectd {
+class cegeka_apache::collectd {
 
   if ($::operatingsystem == 'RedHat' or $::operatingsystem == 'CentOS') and $::lsbmajdistrelease > '4' {
 
     package { 'collectd-apache':
       ensure => present,
-      before => Collectd::Plugin['apache'],
+      before => Collectd::Plugin['cegeka_apache'],
     }
   }
 

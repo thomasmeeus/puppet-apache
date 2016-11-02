@@ -1,4 +1,4 @@
-define apache::vhost (
+define cegeka_apache::vhost (
   $ensure=present,
   $config_file='',
   $config_content=false,
@@ -17,20 +17,20 @@ define apache::vhost (
   $enablehsts=false
 ) {
 
-  include apache::params
+  include cegeka_apache::params
 
   $wwwuser = $user ? {
-    ''      => $apache::params::user,
+    ''      => $cegeka_apache::params::user,
     default => $user,
   }
 
   $wwwgroup = $group ? {
-    ''      => $apache::params::group,
+    ''      => $cegeka_apache::params::group,
     default => $group,
   }
 
   # used in ERB templates
-  $wwwroot = $apache::params::root
+  $wwwroot = $cegeka_apache::params::root
 
   $documentroot = $docroot ? {
     false   => "${wwwroot}/${name}/htdocs",
@@ -55,13 +55,13 @@ define apache::vhost (
         CentOS  => 'httpd_config_t',
         default => undef,
       }
-      file { "${apache::params::conf}/sites-available/${name}":
+      file { "${cegeka_apache::params::conf}/sites-available/${name}":
         ensure  => present,
         owner   => root,
         group   => root,
         mode    => '0644',
         seltype => $configseltype,
-        require => Package[$apache::params::pkg],
+        require => Package[$cegeka_apache::params::pkg],
         notify  => Exec['apache-graceful'],
       }
 
@@ -70,7 +70,7 @@ define apache::vhost (
         CentOS  => 'httpd_sys_content_t',
         default => undef,
       }
-      file { "${apache::params::root}/${name}":
+      file { "${cegeka_apache::params::root}/${name}":
         ensure  => directory,
         owner   => root,
         group   => root,
@@ -83,33 +83,33 @@ define apache::vhost (
         ''      => $wwwuser,
         default => $admin,
       }
-      file { "${apache::params::root}/${name}/conf":
+      file { "${cegeka_apache::params::root}/${name}/conf":
         ensure    => directory,
         group     => $wwwgroup,
         mode      => $mode,
         owner     => $owner,
         seltype   => $configseltype,
-        require   => [File["${apache::params::root}/${name}"]],
+        require   => [File["${cegeka_apache::params::root}/${name}"]],
       }
 
-      file { "${apache::params::root}/${name}/htdocs":
+      file { "${cegeka_apache::params::root}/${name}/htdocs":
         ensure  => directory,
         owner   => $wwwuser,
         group   => $wwwgroup,
         mode    => $mode,
         seltype => $sysseltype,
-        require => [File["${apache::params::root}/${name}"]],
+        require => [File["${cegeka_apache::params::root}/${name}"]],
       }
 
       if $htdocs {
-        File["${apache::params::root}/${name}/htdocs"] {
+        File["${cegeka_apache::params::root}/${name}/htdocs"] {
           source  => $htdocs,
           recurse => true,
         }
       }
 
       if $conf {
-        File["${apache::params::root}/${name}/conf"] {
+        File["${cegeka_apache::params::root}/${name}/conf"] {
           source  => $conf,
           recurse => true,
         }
@@ -117,11 +117,11 @@ define apache::vhost (
 
       # cgi-bin
       $real_cgipath = $cgipath ? {
-          false   => "${apache::params::root}/${name}/cgi-bin/",
+          false   => "${cegeka_apache::params::root}/${name}/cgi-bin/",
           default => $cgipath,
       }
       $real_ensurecgi = $cgipath ? {
-        "${apache::params::root}/${name}/cgi-bin/"  => directory,
+        "${cegeka_apache::params::root}/${name}/cgi-bin/"  => directory,
         default                                     => undef,
       }
 
@@ -138,26 +138,26 @@ define apache::vhost (
         group   => $wwwgroup,
         mode    => $mode,
         seltype => $scriptseltype,
-        require => [File["${apache::params::root}/${name}"]],
+        require => [File["${cegeka_apache::params::root}/${name}"]],
       }
 
       case $config_file {
 
         default: {
-          File["${apache::params::conf}/sites-available/${name}"] {
+          File["${cegeka_apache::params::conf}/sites-available/${name}"] {
             source => $config_file,
           }
         }
         '': {
 
           if $config_content {
-            File["${apache::params::conf}/sites-available/${name}"] {
+            File["${cegeka_apache::params::conf}/sites-available/${name}"] {
               content => $config_content,
             }
           } else {
             # default vhost template
-            File["${apache::params::conf}/sites-available/${name}"] {
-              content => template('apache/vhost.erb'),
+            File["${cegeka_apache::params::conf}/sites-available/${name}"] {
+              content => template('cegeka_apache/vhost.erb'),
             }
           }
         }
@@ -169,89 +169,89 @@ define apache::vhost (
         CentOS  => 'httpd_log_t',
         default => undef,
       }
-      file {"${apache::params::root}/${name}/logs":
+      file {"${cegeka_apache::params::root}/${name}/logs":
         ensure  => directory,
         owner   => apache,
         group   => apache,
         mode    => '0755',
         seltype => $logseltype,
-        require => File["${apache::params::root}/${name}"],
+        require => File["${cegeka_apache::params::root}/${name}"],
       }
 
       # We have to give log files to right people with correct rights on them.
       # Those rights have to match those set by logrotate
-      file { ["${apache::params::root}/${name}/logs/access.log",
-              "${apache::params::root}/${name}/logs/error.log"] :
+      file { ["${cegeka_apache::params::root}/${name}/logs/access.log",
+              "${cegeka_apache::params::root}/${name}/logs/error.log"] :
         ensure  => present,
         owner   => apache,
         group   => apache,
         mode    => '0644',
         seltype => $logseltype,
-        require => File["${apache::params::root}/${name}/logs"],
+        require => File["${cegeka_apache::params::root}/${name}/logs"],
       }
 
       # Private data
-      file {"${apache::params::root}/${name}/private":
+      file {"${cegeka_apache::params::root}/${name}/private":
         ensure  => directory,
         owner   => $wwwuser,
         group   => $wwwgroup,
         mode    => $mode,
         seltype => $sysseltype,
-        require => File["${apache::params::root}/${name}"],
+        require => File["${cegeka_apache::params::root}/${name}"],
       }
 
       # README file
       $readme_content = $readme ? {
-        false   => template('apache/README_vhost.erb'),
+        false   => template('cegeka_apache/README_vhost.erb'),
         default => $readme,
       }
-      file {"${apache::params::root}/${name}/README":
+      file {"${cegeka_apache::params::root}/${name}/README":
         ensure  => present,
         owner   => root,
         group   => root,
         mode    => '0644',
         content => $readme_content,
-        require => File["${apache::params::root}/${name}"],
+        require => File["${cegeka_apache::params::root}/${name}"],
       }
 
 
       exec {"enable vhost ${name}":
-        command => "${apache::params::a2ensite} ${name}",
+        command => "${cegeka_apache::params::a2ensite} ${name}",
         notify  => Exec['apache-graceful'],
-        require => [File[$apache::params::a2ensite],
-          File["${apache::params::conf}/sites-available/${name}"],
-          File["${apache::params::root}/${name}/htdocs"],
-          File["${apache::params::root}/${name}/logs"],
-          File["${apache::params::root}/${name}/conf"]
+        require => [File[$cegeka_apache::params::a2ensite],
+          File["${cegeka_apache::params::conf}/sites-available/${name}"],
+          File["${cegeka_apache::params::root}/${name}/htdocs"],
+          File["${cegeka_apache::params::root}/${name}/logs"],
+          File["${cegeka_apache::params::root}/${name}/conf"]
         ],
-        unless  => "/bin/sh -c '[ -L ${apache::params::conf}/sites-enabled/${name} ] \\
-          && [ ${apache::params::conf}/sites-enabled/${name} -ef ${apache::params::conf}/sites-available/${name} ]'",
+        unless  => "/bin/sh -c '[ -L ${cegeka_apache::params::conf}/sites-enabled/${name} ] \\
+          && [ ${cegeka_apache::params::conf}/sites-enabled/${name} -ef ${cegeka_apache::params::conf}/sites-available/${name} ]'",
       }
     }
 
     absent:{
-      file { "${apache::params::conf}/sites-enabled/${name}":
+      file { "${cegeka_apache::params::conf}/sites-enabled/${name}":
         ensure  => absent,
         require => Exec["disable vhost ${name}"]
       }
 
-      file { "${apache::params::conf}/sites-available/${name}":
+      file { "${cegeka_apache::params::conf}/sites-available/${name}":
         ensure  => absent,
         require => Exec["disable vhost ${name}"]
       }
 
-      exec { "remove ${apache::params::root}/${name}":
-        command => "/bin/rm -rf ${apache::params::root}/${name}",
-        onlyif  => "/usr/bin/test -d ${apache::params::root}/${name}",
+      exec { "remove ${cegeka_apache::params::root}/${name}":
+        command => "/bin/rm -rf ${cegeka_apache::params::root}/${name}",
+        onlyif  => "/usr/bin/test -d ${cegeka_apache::params::root}/${name}",
         require => Exec["disable vhost ${name}"],
       }
 
       exec { "disable vhost ${name}":
-        command => "${apache::params::a2dissite} ${name}",
+        command => "${cegeka_apache::params::a2dissite} ${name}",
         notify  => Exec['apache-graceful'],
-        require => File[$apache::params::a2ensite],
-        onlyif  => "/bin/sh -c '[ -L ${apache::params::conf}/sites-enabled/${name} ] \\
-          && [ ${apache::params::conf}/sites-enabled/${name} -ef ${apache::params::conf}/sites-available/${name} ]'",
+        require => File[$cegeka_apache::params::a2ensite],
+        onlyif  => "/bin/sh -c '[ -L ${cegeka_apache::params::conf}/sites-enabled/${name} ] \\
+          && [ ${cegeka_apache::params::conf}/sites-enabled/${name} -ef ${cegeka_apache::params::conf}/sites-available/${name} ]'",
       }
   }
 
@@ -262,14 +262,14 @@ define apache::vhost (
           default => "/usr/sbin/a2dissite ${name}",
       }
       exec { "disable vhost ${name}":
-        require => Package[$apache::params::pkg],
+        require => Package[$cegeka_apache::params::pkg],
         notify  => Exec['apache-graceful'],
-        command => "${apache::params::a2dissite} ${name}",
-        onlyif  => "/bin/sh -c '[ -L ${apache::params::conf}/sites-enabled/${name} ] \\
-          && [ ${apache::params::conf}/sites-enabled/${name} -ef ${apache::params::conf}/sites-available/${name} ]'",
+        command => "${cegeka_apache::params::a2dissite} ${name}",
+        onlyif  => "/bin/sh -c '[ -L ${cegeka_apache::params::conf}/sites-enabled/${name} ] \\
+          && [ ${cegeka_apache::params::conf}/sites-enabled/${name} -ef ${cegeka_apache::params::conf}/sites-available/${name} ]'",
       }
 
-      file { "${apache::params::conf}/sites-enabled/${name}":
+      file { "${cegeka_apache::params::conf}/sites-enabled/${name}":
         ensure  => absent,
         require => Exec["disable vhost ${name}"]
       }

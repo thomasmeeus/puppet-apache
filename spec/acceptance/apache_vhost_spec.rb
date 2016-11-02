@@ -7,13 +7,13 @@ when 'Debian'
   vhostd = '/etc/apache2/sites-enabled'
 end
 
-describe 'apache::vhost' do
+describe 'cegeka_apache::vhost' do
 
   describe 'running puppet code' do
     it 'should work with no errors' do
       pp = <<-EOS
-        include apache
-        apache::vhost { 'www.example.com':
+        include cegeka_apache
+        cegeka_apache::vhost { 'www.example.com':
           ensure    => present,
           require   => Package['httpd'],
         }

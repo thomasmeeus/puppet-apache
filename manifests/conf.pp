@@ -1,9 +1,9 @@
 /*
 
-== Definition: apache::conf
+== Definition: cegeka_apache::conf
 
 Convenient wrapper around File[] resources to add random configuration
-snippets to apache. Shouldn't be called directly - please see apache::confd and apache::directive
+snippets to apache. Shouldn't be called directly - please see cegeka_apache::confd and cegeka_apache::directive
 
 Parameters:
 - *ensure*:        present/absent.
@@ -19,14 +19,14 @@ Requires:
 
 Example usage:
 
-  apache::conf { "example 1":
+  cegeka_apache::conf { "example 1":
     ensure        => present,
     path          => /var/www/foo/conf
     configuration => "WSGIPythonEggs /var/cache/python-eggs",
   }
 
 */
-define apache::conf($configuration, $path, $ensure=present, $filename='', $prefix='configuration') {
+define cegeka_apache::conf($configuration, $path, $ensure=present, $filename='', $prefix='configuration') {
   $fname = regsubst($name, '\s', '_', 'G')
 
   if ($path == '') {

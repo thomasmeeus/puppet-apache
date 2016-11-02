@@ -1,15 +1,15 @@
 require 'spec_helper_acceptance'
 
-describe 'apache::redirectmatch' do
+describe 'cegeka_apache::redirectmatch' do
 
   describe 'running puppet code' do
     it 'should work with no errors' do
       pp = <<-EOS
-        include apache
-        apache::vhost { 'www.example.com':
+        include cegeka_apache
+        cegeka_apache::vhost { 'www.example.com':
           ensure => present,
         }
-        apache::redirectmatch { "example":
+        cegeka_apache::redirectmatch { "example":
           regex => "^/(foo|bar)",
           url   => "http://foobar.example.com/",
           vhost => "www.example.com",

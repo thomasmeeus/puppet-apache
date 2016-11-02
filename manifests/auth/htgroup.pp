@@ -1,4 +1,4 @@
-define apache::auth::htgroup (
+define cegeka_apache::auth::htgroup (
   $groupname,
   $members,
   $ensure='present',
@@ -6,13 +6,13 @@ define apache::auth::htgroup (
   $groupFileLocation=false,
   $groupFileName='htgroup'){
 
-  include apache::params
+  include cegeka_apache::params
 
   if $groupFileLocation {
     $_groupFileLocation = $groupFileLocation
   } else {
     if $vhost {
-      $_groupFileLocation = "${apache::params::root}/${vhost}/private"
+      $_groupFileLocation = "${cegeka_apache::params::root}/${vhost}/private"
     } else {
       fail 'parameter vhost is require !'
     }
@@ -23,14 +23,14 @@ define apache::auth::htgroup (
   case $ensure {
 
     'present': {
-      exec {"/usr/bin/test -f ${_authGroupFile} || OPT='-c'; ${apache::params::htpasswd_cmd} \$OPT ${_authGroupFile} ${groupname} ${members}":
+      exec {"/usr/bin/test -f ${_authGroupFile} || OPT='-c'; ${cegeka_apache::params::htpasswd_cmd} \$OPT ${_authGroupFile} ${groupname} ${members}":
         unless  => "/bin/egrep -q '^${groupname}: ${members}$' ${_authGroupFile}",
         require => File[$_groupFileLocation],
       }
     }
 
     'absent': {
-      exec {"${apache::params::htpasswd_cmd} -D ${_authGroupFile} ${groupname}":
+      exec {"${cegeka_apache::params::htpasswd_cmd} -D ${_authGroupFile} ${groupname}":
         onlyif => "/bin/egrep -q '^${groupname}:' ${_authGroupFile}",
         notify => Exec["delete ${_authGroupFile} after remove ${groupname}"],
       }

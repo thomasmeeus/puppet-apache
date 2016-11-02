@@ -1,4 +1,4 @@
-class apache::webdav::base {
+class cegeka_apache::webdav::base {
 
   case $::operatingsystem {
 
@@ -8,7 +8,7 @@ class apache::webdav::base {
         ensure => present,
       }
 
-      apache::module {'encoding':
+      cegeka_apache::module {'encoding':
         ensure  => present,
         require => Package['libapache2-mod-encoding'],
       }
@@ -22,12 +22,12 @@ class apache::webdav::base {
     default: {}
   }
 
-  apache::module {['dav', 'dav_fs']:
+  cegeka_apache::module {['dav', 'dav_fs']:
     ensure => present,
   }
 
-  if !defined(Apache::Module['headers']) {
-    apache::module {'headers':
+  if !defined(Cegeka_apache::Module['headers']) {
+    cegeka_apache::module {'headers':
       ensure => present,
     }
   }

@@ -5,7 +5,7 @@ describe 'apache' do
 	describe 'running puppet code' do
     it 'should work with no errors' do
       pp = <<-EOS
-        include apache 
+        include cegeka_apache 
       EOS
 
       # Run it twice and test for idempotency

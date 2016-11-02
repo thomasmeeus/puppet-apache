@@ -1,9 +1,9 @@
 /*
-== Definition: apache::namevhost
+== Definition: cegeka_apache::namevhost
 
 Adds a "NameVirtualHost" directive to apache's port.conf file.
 
-Every "ports" parameter you define Apache::Vhost resources should have a
+Every "ports" parameter you define Cegeka_apache::Vhost resources should have a
 matching NameVirtualHost directive.
 
 Parameters:
@@ -15,16 +15,16 @@ Requires:
 
 Example usage:
 
-  apache::namevhost { "*:80": }
-  apache::namevhost { "127.0.0.1:8080": ensure => present }
+  cegeka_apache::namevhost { "*:80": }
+  cegeka_apache::namevhost { "127.0.0.1:8080": ensure => present }
 
 */
-define apache::namevhost ($ensure='present') {
+define cegeka_apache::namevhost ($ensure='present') {
 
-  include apache::params
+  include cegeka_apache::params
 
   concat::fragment { "apache-namevhost.conf-${name}":
-    target  => "${apache::params::conf}/ports.conf",
+    target  => "${cegeka_apache::params::conf}/ports.conf",
     content => "NameVirtualHost ${name}\n",
   }
 

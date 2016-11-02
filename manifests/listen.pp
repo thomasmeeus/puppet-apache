@@ -1,5 +1,5 @@
 /*
-== Definition: apache::listen
+== Definition: cegeka_apache::listen
 
 Adds a "Listen" directive to apache's port.conf file.
 
@@ -12,16 +12,16 @@ Requires:
 
 Example usage:
 
-  apache::listen { "80": }
-  apache::listen { "127.0.0.1:8080": ensure => present }
+  cegeka_apache::listen { "80": }
+  cegeka_apache::listen { "127.0.0.1:8080": ensure => present }
 
 */
-define apache::listen ($ensure='present') {
+define cegeka_apache::listen ($ensure='present') {
 
-  include apache::params
+  include cegeka_apache::params
 
   concat::fragment { "apache-ports.conf-${name}":
-    target  => "${apache::params::conf}/ports.conf",
+    target  => "${cegeka_apache::params::conf}/ports.conf",
     content => "Listen ${name}\n",
   }
 

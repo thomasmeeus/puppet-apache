@@ -6,7 +6,7 @@ Types
 
 Definitions related to the apache authentication should always be in the form :
 
-apache::auth::type::provider::authorization
+cegeka_apache::auth::type::provider::authorization
 
 To be consistent with the three types of Apache modules involved in the 
 authentication and authorization process :
@@ -23,7 +23,7 @@ Example:
 
 1. create one or more users :
 
-   apache::auth::htpasswd {"user1 in /a/path/htpasswd":
+   cegeka_apache::auth::htpasswd {"user1 in /a/path/htpasswd":
     ensure => present,
     userFileLocation => "/srv/a/path",
     userFileName => "htpasswd",
@@ -31,7 +31,7 @@ Example:
     clearPassword => "user1", # use encryption in definition
   }
 
-  apache::auth::htpasswd {"user2 in /var/www/camptocamp.com/private/htpasswd":
+  cegeka_apache::auth::htpasswd {"user2 in /var/www/camptocamp.com/private/htpasswd":
     ensure => present,
     vhost => "camptocamp.com"
     username => "user2",
@@ -40,7 +40,7 @@ Example:
  
 2. create one or more groups :
 
-  apache::auth::htgroup {"group1 in /var/www/camptocamp.com/private/htgroup":
+  cegeka_apache::auth::htgroup {"group1 in /var/www/camptocamp.com/private/htgroup":
     ensure => present,
     groupname => "group1",
     members => "user1 user2",
@@ -48,13 +48,13 @@ Example:
 
 3. restrict access to a location with these users our groups
 
-  apache::auth::basic::file::group {"group1-webdav1":
+  cegeka_apache::auth::basic::file::group {"group1-webdav1":
     vhost => "camptocamp.com",
     location => "/webdav1",
     groups => "group1",
   }
 
-  apache::auth::basic::file::user {"user1-on-webdav2":
+  cegeka_apache::auth::basic::file::user {"user1-on-webdav2":
     vhost => "camptocamp.com",
     location => "/webdav2",
     authUserFile => "/srv/dav0/htpasswd",
@@ -67,7 +67,7 @@ Example:
 
 Example:
 
-apache::auth::basic::ldap {"collectd":
+cegeka_apache::auth::basic::ldap {"collectd":
   vhost => $fqdn,
   location => "/collection3",
   authLDAPUrl => 'ldap://ldap.foobar.ch/c=ch?uid??',

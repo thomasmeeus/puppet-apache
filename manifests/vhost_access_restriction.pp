@@ -1,6 +1,6 @@
 /*
 
-== Definition: apache::vhost-access-restriction
+== Definition: cegeka_apache::vhost-access-restriction
 
 Simple way of restriction the access to a folder in a given virtualhost.
 
@@ -23,11 +23,11 @@ Parameters:
 
 Requires:
 - Class["apache"]
-- matching Apache::Vhost[] instance
+- matching Cegeka_apache::Vhost[] instance
 
 Example usage:
 
-  apache::proxypass { "proxy legacy dir to legacy server":
+  cegeka_apache::proxypass { "proxy legacy dir to legacy server":
     ensure       => present,
     location     => "/legacy/",
     url          => "http://legacyserver.example.com",
@@ -37,7 +37,7 @@ Example usage:
   }
 
 */
-define apache::vhost_access_restriction (
+define cegeka_apache::vhost_access_restriction (
   $vhost=namevar,
   $ensure='present',
   $folder,
@@ -47,14 +47,14 @@ define apache::vhost_access_restriction (
   $allow_from = [],
 ) {
 
-  include apache::params
+  include cegeka_apache::params
 
 
   file { "access restriction on ${name} on ${vhost}":
     ensure  => $ensure,
-    content => template('apache/vhost_access_restriction.erb'),
-    path    => "${apache::params::root}/${vhost}/conf/00-vhost_access_restriction-${name}.conf",
+    content => template('cegeka_apache/vhost_access_restriction.erb'),
+    path    => "${cegeka_apache::params::root}/${vhost}/conf/00-vhost_access_restriction-${name}.conf",
     notify  => Exec['apache-graceful'],
-    require => Apache::Vhost[$vhost],
+    require => Cegeka_apache::Vhost[$vhost],
   }
 }

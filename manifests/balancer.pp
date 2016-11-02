@@ -1,6 +1,6 @@
 /*
 
-== Definition: apache::balancer
+== Definition: cegeka_apache::balancer
 
 Define a basic balanced proxy, to split requests between different backends,
 with an optional hot standby server.
@@ -26,11 +26,11 @@ Parameters:
 
 Requires:
 - Class["apache"]
-- matching Apache::Vhost[] instance
+- matching Cegeka_apache::Vhost[] instance
 
 Example usage:
 
-  apache::balancer { "my balanced service":
+  cegeka_apache::balancer { "my balanced service":
     location   => "/mywebapp/",
     proto      => "ajp",
     members    => [
@@ -44,7 +44,7 @@ Example usage:
   }
 
 */
-define apache::balancer (
+define cegeka_apache::balancer (
   $vhost,
   $ensure='present',
   $location='',
@@ -58,18 +58,18 @@ define apache::balancer (
   # normalise name
   $fname = regsubst($name, '\s', '_', 'G')
 
-  include apache::params
+  include cegeka_apache::params
 
   $balancer = "balancer://${fname}"
 
-  if !defined(Apache::Module['proxy']) {
-    apache::module {'proxy':
+  if !defined(Cegeka_apache::Module['proxy']) {
+    cegeka_apache::module {'proxy':
       ensure => $ensure,
     }
   }
 
-  if !defined(Apache::Module['proxy_balancer']) {
-    apache::module {'proxy_balancer':
+  if !defined(Cegeka_apache::Module['proxy_balancer']) {
+    cegeka_apache::module {'proxy_balancer':
       ensure => $ensure,
     }
   }
@@ -77,16 +77,16 @@ define apache::balancer (
   # ensure proxy modules are enabled
   case $proto {
     http: {
-      if !defined(Apache::Module['proxy_http']) {
-        apache::module {'proxy_http':
+      if !defined(Cegeka_apache::Module['proxy_http']) {
+        cegeka_apache::module {'proxy_http':
           ensure => $ensure,
         }
       }
     }
 
     ajp: {
-      if !defined(Apache::Module['proxy_ajp']) {
-        apache::module {'proxy_ajp':
+      if !defined(Cegeka_apache::Module['proxy_ajp']) {
+        cegeka_apache::module {'proxy_ajp':
           ensure => $ensure,
         }
       }
@@ -104,15 +104,15 @@ define apache::balancer (
   }
 
   $real_conf_path = $filename ? {
-    ''      => "${apache::params::root}/${vhost}/conf/balancer-${fname}.conf",
-    default => "${apache::params::root}/${vhost}/conf/${filename}",
+    ''      => "${cegeka_apache::params::root}/${vhost}/conf/balancer-${fname}.conf",
+    default => "${cegeka_apache::params::root}/${vhost}/conf/${filename}",
   }
   file{"${name} balancer on ${vhost}":
     ensure  => $ensure,
-    content => template('apache/balancer.erb'),
+    content => template('cegeka_apache/balancer.erb'),
     seltype => $confseltype,
     path    => $real_conf_path,
     notify  => Exec['apache-graceful'],
-    require => Apache::Vhost[$vhost],
+    require => Cegeka_apache::Vhost[$vhost],
   }
 }

@@ -1,12 +1,12 @@
-class apache::reverseproxy {
+class cegeka_apache::reverseproxy {
 
-  include apache::params
+  include cegeka_apache::params
 
-  apache::module {['proxy', 'proxy_http', 'proxy_ajp', 'proxy_connect']: }
+  cegeka_apache::module {['proxy', 'proxy_http', 'proxy_ajp', 'proxy_connect']: }
 
   file { 'reverseproxy.conf':
     ensure  => present,
-    path    => "${apache::params::conf}/conf.d/reverseproxy.conf",
+    path    => "${cegeka_apache::params::conf}/conf.d/reverseproxy.conf",
     content => '# file managed by puppet
 <IfModule mod_proxy.c>
   ProxyRequests Off
@@ -17,7 +17,7 @@ class apache::reverseproxy {
 </IfModule>
 ',
     notify  => Exec['apache-graceful'],
-    require => Package['apache'],
+    require => Package['cegeka_apache'],
   }
 
 }

@@ -1,4 +1,4 @@
-define apache::auth::htpasswd (
+define cegeka_apache::auth::htpasswd (
   $username,
   $ensure='present',
   $vhost=false,
@@ -7,13 +7,13 @@ define apache::auth::htpasswd (
   $cryptPassword=false,
   $clearPassword=false){
 
-  include apache::params
+  include cegeka_apache::params
 
   if $userFileLocation {
     $_userFileLocation = $userFileLocation
   } else {
     if $vhost {
-      $_userFileLocation = "${apache::params::root}/${vhost}/private"
+      $_userFileLocation = "${cegeka_apache::params::root}/${vhost}/private"
     } else {
       fail 'parameter vhost is required !'
     }
@@ -33,22 +33,22 @@ define apache::auth::htpasswd (
       }
 
       if $cryptPassword {
-        exec {"/usr/bin/test -f ${_authUserFile} || OPT='-c'; ${apache::params::htpasswd_cmd} -bp \${OPT} ${_authUserFile} ${username} '${cryptPassword}'":
+        exec {"/usr/bin/test -f ${_authUserFile} || OPT='-c'; ${cegeka_apache::params::htpasswd_cmd} -bp \${OPT} ${_authUserFile} ${username} '${cryptPassword}'":
           unless  => "/bin/grep -q \"${username}:${cryptPassword}\" ${_authUserFile}",
           require => File[$_userFileLocation],
         }
       }
 
       if $clearPassword {
-        exec {"/usr/bin/test -f ${_authUserFile} || OPT='-c'; ${apache::params::htpasswd_cmd} -bm \$OPT ${_authUserFile} ${username} '${clearPassword}'":
-          unless  => "/bin/egrep \"^${username}:\" ${_authUserFile} && /bin/grep \"${username}:$(/bin/echo '${clearPassword}' | ${apache::params::openssl_cmd} passwd -arp1 -salt $(/bin/egrep \"^${username}:\" ${_authUserFile} | cut -d'$' -f2))\" ${_authUserFile}",
+        exec {"/usr/bin/test -f ${_authUserFile} || OPT='-c'; ${cegeka_apache::params::htpasswd_cmd} -bm \$OPT ${_authUserFile} ${username} '${clearPassword}'":
+          unless  => "/bin/egrep \"^${username}:\" ${_authUserFile} && /bin/grep \"${username}:$(/bin/echo '${clearPassword}' | ${cegeka_apache::params::openssl_cmd} passwd -arp1 -salt $(/bin/egrep \"^${username}:\" ${_authUserFile} | cut -d'$' -f2))\" ${_authUserFile}",
           require => File[$_userFileLocation],
         }
       }
     }
 
     'absent': {
-      exec {"${apache::params::htpasswd_cmd} -D ${_authUserFile} ${username}":
+      exec {"${cegeka_apache::params::htpasswd_cmd} -D ${_authUserFile} ${username}":
         onlyif => "/bin/egrep -q '^${username}:' ${_authUserFile}",
         notify => Exec["delete ${_authUserFile} after remove ${username}"],
       }

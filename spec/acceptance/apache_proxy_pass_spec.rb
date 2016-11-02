@@ -1,15 +1,15 @@
 require 'spec_helper_acceptance'
 
-describe 'apache::proxy_pass' do
+describe 'cegeka_apache::proxy_pass' do
 
   describe 'running puppet code' do
     it 'should work with no errors' do
       pp = <<-EOS
-        include apache
-        apache::vhost { 'www.example.com':
+        include cegeka_apache
+        cegeka_apache::vhost { 'www.example.com':
           ensure => present,
         }
-        apache::proxypass { "proxy legacy dir to legacy server":
+        cegeka_apache::proxypass { "proxy legacy dir to legacy server":
           ensure       => present,
           location     => "/legacy/",
           url          => "http://legacyserver.example.com",

@@ -1,6 +1,6 @@
 /*
 
-== Definition: apache::redirectmatch
+== Definition: cegeka_apache::redirectmatch
 
 Convenient way to declare a RedirectMatch directive in a virtualhost context.
 
@@ -16,18 +16,18 @@ Parameters:
 
 Requires:
 - Class["apache"]
-- matching Apache::Vhost[] instance
+- matching Cegeka_apache::Vhost[] instance
 
 Example usage:
 
-  apache::redirectmatch { "example":
+  cegeka_apache::redirectmatch { "example":
     regex => "^/(foo|bar)",
     url   => "http://foobar.example.com/",
     vhost => "www.example.com",
   }
 
 */
-define apache::redirectmatch (
+define cegeka_apache::redirectmatch (
   $regex,
   $url,
   $vhost,
@@ -37,7 +37,7 @@ define apache::redirectmatch (
 
   $fname = regsubst($name, '\s', '_', 'G')
 
-  include apache::params
+  include cegeka_apache::params
 
   $confseltype =  $::operatingsystem ? {
     'RedHat' => 'httpd_config_t',
@@ -46,8 +46,8 @@ define apache::redirectmatch (
   }
 
   $real_conf_path = $filename ? {
-    ''      => "${apache::params::root}/${vhost}/conf/redirect-${fname}.conf",
-    default => "${apache::params::root}/${vhost}/conf/${filename}",
+    ''      => "${cegeka_apache::params::root}/${vhost}/conf/redirect-${fname}.conf",
+    default => "${cegeka_apache::params::root}/${vhost}/conf/${filename}",
   }
 
   file { "${name} redirect on ${vhost}":
@@ -56,6 +56,6 @@ define apache::redirectmatch (
     seltype => $confseltype,
     path    => $real_conf_path,
     notify  => Exec['apache-graceful'],
-    require => Apache::Vhost[$vhost],
+    require => Cegeka_apache::Vhost[$vhost],
   }
 }

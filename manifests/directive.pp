@@ -1,8 +1,8 @@
 /*
 
-== Definition: apache::directive
+== Definition: cegeka_apache::directive
 
-Convenient wrapper around apache::conf resources to add random configuration
+Convenient wrapper around cegeka_apache::conf resources to add random configuration
 snippets to an apache virtualhost.
 
 Parameters:
@@ -15,12 +15,12 @@ Parameters:
   in alphabetical order.
 
 Requires:
-- Class['apache']
-- matching Apache::Vhost[] instance
+- Class['cegeka_apache']
+- matching Cegeka_apache::Vhost[] instance
 
 Example usage:
 
-  apache::directive { 'example 1':
+  cegeka_apache::directive { 'example 1':
     ensure    => present,
     directive => '
       RewriteEngine on
@@ -29,27 +29,27 @@ Example usage:
     vhost     => 'www.example.com',
   }
 
-  apache::directive { 'example 2':
+  cegeka_apache::directive { 'example 2':
     ensure    => present,
     directive => content('example/snippet.erb'),
     vhost     => 'www.example.com',
   }
 
 */
-define apache::directive ($vhost, $ensure=present, $directive='', $filename='') {
+define cegeka_apache::directive ($vhost, $ensure=present, $directive='', $filename='') {
 
-  include apache::params
+  include cegeka_apache::params
 
   if ($ensure == present and $directive == '') {
     fail 'empty "directive" parameter'
   }
 
-  apache::conf {$name:
+  cegeka_apache::conf {$name:
     ensure        => $ensure,
-    path          => "${apache::params::root}/${vhost}/conf",
+    path          => "${cegeka_apache::params::root}/${vhost}/conf",
     prefix        => 'directive',
     filename      => $filename,
     configuration => $directive,
-    require       => Apache::Vhost[$vhost],
+    require       => Cegeka_apache::Vhost[$vhost],
   }
 }

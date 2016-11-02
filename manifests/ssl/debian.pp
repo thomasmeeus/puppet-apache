@@ -1,7 +1,7 @@
-class apache::ssl::debian {
-  include apache::base::ssl
+class cegeka_apache::ssl::debian {
+  include cegeka_apache::base::ssl
 
-  apache::module {'ssl':
+  cegeka_apache::module {'ssl':
     ensure => present,
   }
 

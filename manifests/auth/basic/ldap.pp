@@ -1,4 +1,4 @@
-define apache::auth::basic::ldap (
+define cegeka_apache::auth::basic::ldap (
   $vhost,
   $authLDAPUrl,
   $ensure='present',
@@ -18,14 +18,14 @@ define apache::auth::basic::ldap (
 
   $fname = regsubst($name, '\s', '_', 'G')
 
-  include apache::params
+  include cegeka_apache::params
 
-  if defined(Apache::Module['ldap']) {} else {
-    apache::module {'ldap': }
+  if defined(Cegeka_apache::Module['ldap']) {} else {
+    cegeka_apache::module {'ldap': }
   }
 
-  if defined(Apache::Module['authnz_ldap']) {} else {
-    apache::module {'authnz_ldap': }
+  if defined(Cegeka_apache::Module['authnz_ldap']) {} else {
+    cegeka_apache::module {'authnz_ldap': }
   }
 
   if $authname {
@@ -40,9 +40,9 @@ define apache::auth::basic::ldap (
     default  => undef,
   }
 
-  file { "${apache::params::root}/${vhost}/conf/auth-basic-ldap-${fname}.conf":
+  file { "${cegeka_apache::params::root}/${vhost}/conf/auth-basic-ldap-${fname}.conf":
     ensure  => $ensure,
-    content => template('apache/auth-basic-ldap.erb'),
+    content => template('cegeka_apache/auth-basic-ldap.erb'),
     seltype => $confseltype,
     notify  => Exec['apache-graceful'],
   }

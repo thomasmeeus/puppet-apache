@@ -1,12 +1,12 @@
 /*
 
-== Class: apache::ssl
+== Class: cegeka_apache::ssl
 
 This class basically does the same thing the "apache" class does + enable
 mod_ssl.
 
 It also drops a little shell script in /usr/local/sbin/generate-ssl-cert.sh,
-which is used by apache::vhost-ssl to generate an SSL key and certificate. This
+which is used by cegeka_apache::vhost-ssl to generate an SSL key and certificate. This
 script calls openssl with /var/www/<vhost>/ssl/ssleay.cnf as a template. The
 content of this file is influenced by a few class variables described below.
 
@@ -26,13 +26,13 @@ Class variables:
 
 Example usage:
 
-  include apache::ssl
+  include cegeka_apache::ssl
 
 */
-class apache::ssl inherits apache {
+class cegeka_apache::ssl inherits apache {
   case $::operatingsystem {
-    Debian,Ubuntu:  { include apache::ssl::debian}
-    RedHat,CentOS:  { include apache::ssl::redhat}
+    Debian,Ubuntu:  { include cegeka_apache::ssl::debian}
+    RedHat,CentOS:  { include cegeka_apache::ssl::redhat}
     default: { fail "Unsupported operatingsystem ${::operatingsystem}" }
   }
 }

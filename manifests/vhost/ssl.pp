@@ -1,10 +1,10 @@
 /*
 
-== Definition: apache::vhost::ssl
+== Definition: cegeka_apache::vhost::ssl
 
 Creates an SSL enabled virtualhost.
 
-As it calls apache::vhost, most of the parameters are the same. A few
+As it calls cegeka_apache::vhost, most of the parameters are the same. A few
 additional parameters are used to configure the SSL specific stuff.
 
 An "ssl" subdirectory will be created in the virtualhost's directory. By
@@ -16,19 +16,19 @@ additional file, ssleay.cnf, is used as a template by generate-ssl-cert.sh.
 Parameters:
 - *$name*: the name of the virtualhost. Will be used as the CN in the generated
   ssl certificate.
-- *$ensure*: see apache::vhost
-- *$config_file*: see apache::vhost
-- *$config_content*: see apache::vhost
-- *$htdocs*: see apache::vhost
-- *$conf*: see apache::vhost
-- *$readme*: see apache::vhost
-- *$docroot*: see apache::vhost
-- *$cgibin*: see apache::vhost
-- *$user*: see apache::vhost
-- *$admin*: see apache::vhost
-- *$group*: see apache::vhost
-- *$mode*: see apache::vhost
-- *$aliases*: see apache::vhost. The generated SSL certificate will have this
+- *$ensure*: see cegeka_apache::vhost
+- *$config_file*: see cegeka_apache::vhost
+- *$config_content*: see cegeka_apache::vhost
+- *$htdocs*: see cegeka_apache::vhost
+- *$conf*: see cegeka_apache::vhost
+- *$readme*: see cegeka_apache::vhost
+- *$docroot*: see cegeka_apache::vhost
+- *$cgibin*: see cegeka_apache::vhost
+- *$user*: see cegeka_apache::vhost
+- *$admin*: see cegeka_apache::vhost
+- *$group*: see cegeka_apache::vhost
+- *$mode*: see cegeka_apache::vhost
+- *$aliases*: see cegeka_apache::vhost. The generated SSL certificate will have this
   list as DNS subjectAltName entries.
 - *$ip_address*: the ip address defined in the <VirtualHost> directive.
   Defaults to "*".
@@ -75,9 +75,9 @@ Example usage:
   $sslcert_locality="San Francisco"
   $sslcert_organisation="Snake Oil, Ltd."
 
-  include apache::ssl
+  include cegeka_apache::ssl
 
-  apache::vhost::ssl { "foo.example.com":
+  cegeka_apache::vhost::ssl { "foo.example.com":
     ensure      => present,
     ip_address  => "10.0.0.2",
     publish_csr => "/home/webmaster/foo.example.com.csr",
@@ -85,7 +85,7 @@ Example usage:
   }
 
   # go to https://bar.example.com/bar.example.com.csr to retrieve the CSR.
-  apache::vhost::ssl { "bar.example.com":
+  cegeka_apache::vhost::ssl { "bar.example.com":
     ensure      => present,
     ip_address  => "10.0.0.3",
     cert        => "puppet:///modules/exampleproject/ssl-certs/bar.example.com.crt",
@@ -95,7 +95,7 @@ Example usage:
   }
 
 */
-define apache::vhost::ssl (
+define cegeka_apache::vhost::ssl (
   $ensure=present,
   $config_file='',
   $config_content=false,
@@ -133,20 +133,20 @@ define apache::vhost::ssl (
   if ($certcn != false ) { $sslcert_commonname = $certcn }
   else { $sslcert_commonname = $name }
 
-  include apache::params
+  include cegeka_apache::params
 
   $wwwuser = $user ? {
-    ''      => $apache::params::user,
+    ''      => $cegeka_apache::params::user,
     default => $user,
   }
 
   $wwwgroup = $group ? {
-    ''      => $apache::params::group,
+    ''      => $cegeka_apache::params::group,
     default => $group,
   }
 
   # used in ERB templates
-  $wwwroot = $apache::params::root
+  $wwwroot = $cegeka_apache::params::root
 
   $documentroot = $docroot ? {
     false   => "${wwwroot}/${name}/htdocs",
@@ -160,13 +160,13 @@ define apache::vhost::ssl (
   }
 
   # define variable names used in vhost-ssl.erb template
-  $certfile      = "${apache::params::root}/${name}/ssl/${name}.crt"
-  $certkeyfile   = "${apache::params::root}/${name}/ssl/${name}.key"
-  $csrfile       = "${apache::params::root}/${name}/ssl/${name}.csr"
+  $certfile      = "${cegeka_apache::params::root}/${name}/ssl/${name}.crt"
+  $certkeyfile   = "${cegeka_apache::params::root}/${name}/ssl/${name}.key"
+  $csrfile       = "${cegeka_apache::params::root}/${name}/ssl/${name}.csr"
 
   # By default, use CA certificate list shipped with the distribution.
   if $cacert != false {
-    $cacertfile = "${apache::params::root}/${name}/ssl/cacert.crt"
+    $cacertfile = "${cegeka_apache::params::root}/${name}/ssl/cacert.crt"
   } else {
     $cacertfile = $::operatingsystem ? {
       /RedHat|CentOS/ => '/etc/pki/tls/certs/ca-bundle.crt',
@@ -176,23 +176,23 @@ define apache::vhost::ssl (
 
   # If a revocation file is provided
   if $cacrl != false {
-    $cacrlfile = "${apache::params::root}/${name}/ssl/cacert.crl"
+    $cacrlfile = "${cegeka_apache::params::root}/${name}/ssl/cacert.crl"
   }
 
   if $certchain != false {
-    $certchainfile = "${apache::params::root}/${name}/ssl/certchain.crt"
+    $certchainfile = "${cegeka_apache::params::root}/${name}/ssl/certchain.crt"
   }
 
   $conf_content = $config_content ? {
     false           => $sslonly ? {
-      true          => template('apache/vhost-redirect-http-https.erb', 'apache/vhost-ssl.erb'),
-      default       => template('apache/vhost.erb', 'apache/vhost-ssl.erb'),
+      true          => template('cegeka_apache/vhost-redirect-http-https.erb', 'cegeka_apache/vhost-ssl.erb'),
+      default       => template('cegeka_apache/vhost.erb', 'cegeka_apache/vhost-ssl.erb'),
     },
     default         => $config_content,
   }
 
   # call parent definition to actually do the virtualhost setup.
-  apache::vhost {$name:
+  cegeka_apache::vhost {$name:
     ensure            => $ensure,
     config_file       => $config_file,
     config_content    => $conf_content,
@@ -211,22 +211,22 @@ define apache::vhost::ssl (
   }
 
   if $ensure == 'present' {
-    file { "${apache::params::root}/${name}/ssl":
+    file { "${cegeka_apache::params::root}/${name}/ssl":
       ensure  => directory,
       owner   => 'root',
       group   => 'root',
       mode    => '0700',
       seltype => 'cert_t',
-      require => [File["${apache::params::root}/${name}"]],
+      require => [File["${cegeka_apache::params::root}/${name}"]],
     }
 
     # template file used to generate SSL key, cert and csr.
-    file { "${apache::params::root}/${name}/ssl/ssleay.cnf":
+    file { "${cegeka_apache::params::root}/${name}/ssl/ssleay.cnf":
       ensure  => present,
       owner   => 'root',
       mode    => '0640',
-      content => template('apache/ssleay.cnf.erb'),
-      require => File["${apache::params::root}/${name}/ssl"],
+      content => template('cegeka_apache/ssleay.cnf.erb'),
+      require => File["${cegeka_apache::params::root}/${name}/ssl"],
     }
 
     # The certificate and the private key will be generated only if $name.crt
@@ -235,11 +235,11 @@ define apache::vhost::ssl (
     if ($genssl) {
       exec { "generate-ssl-cert-${name}":
         environment => ["HOME=."],
-        command     => "/usr/local/sbin/generate-ssl-cert.sh ${name} ${apache::params::root}/${name}/ssl/ssleay.cnf ${apache::params::root}/${name}/ssl/ ${days}",
+        command     => "/usr/local/sbin/generate-ssl-cert.sh ${name} ${cegeka_apache::params::root}/${name}/ssl/ssleay.cnf ${cegeka_apache::params::root}/${name}/ssl/ ${days}",
         creates     => $csrfile,
         notify      => Exec['apache-graceful'],
         require     => [
-          File["${apache::params::root}/${name}/ssl/ssleay.cnf"],
+          File["${cegeka_apache::params::root}/${name}/ssl/ssleay.cnf"],
           File['/usr/local/sbin/generate-ssl-cert.sh'],
         ],
       }
@@ -260,7 +260,7 @@ define apache::vhost::ssl (
         source  => $certificate,
         seltype => 'cert_t',
         notify  => Exec['apache-graceful'],
-        require => [File["${apache::params::root}/${name}/ssl"], Exec["generate-ssl-cert-${name}"]],
+        require => [File["${cegeka_apache::params::root}/${name}/ssl"], Exec["generate-ssl-cert-${name}"]],
       }
     } else {
       file { $certfile:
@@ -270,7 +270,7 @@ define apache::vhost::ssl (
         source  => $certificate,
         seltype => 'cert_t',
         notify  => Exec['apache-graceful'],
-        require => [File["${apache::params::root}/${name}/ssl"]]
+        require => [File["${cegeka_apache::params::root}/${name}/ssl"]]
       }
     }
 
@@ -289,7 +289,7 @@ define apache::vhost::ssl (
         source  => $certificate_key,
         seltype => 'cert_t',
         notify  => Exec['apache-graceful'],
-        require => [File["${apache::params::root}/${name}/ssl"], Exec["generate-ssl-cert-${name}"]],
+        require => [File["${cegeka_apache::params::root}/${name}/ssl"], Exec["generate-ssl-cert-${name}"]],
       }
     } else {
       file { $certkeyfile:
@@ -299,7 +299,7 @@ define apache::vhost::ssl (
         source  => $certificate_key,
         seltype => 'cert_t',
         notify  => Exec['apache-graceful'],
-        require => [File["${apache::params::root}/${name}/ssl"]]
+        require => [File["${cegeka_apache::params::root}/${name}/ssl"]]
       }
     }
 
@@ -313,7 +313,7 @@ define apache::vhost::ssl (
         source  => $cacert,
         seltype => 'cert_t',
         notify  => Exec['apache-graceful'],
-        require => File["${apache::params::root}/${name}/ssl"],
+        require => File["${cegeka_apache::params::root}/${name}/ssl"],
       }
     }
 
@@ -326,7 +326,7 @@ define apache::vhost::ssl (
         source  => $cacrl,
         seltype => 'cert_t',
         notify  => Exec['apache-graceful'],
-        require => File["${apache::params::root}/${name}/ssl"],
+        require => File["${cegeka_apache::params::root}/${name}/ssl"],
       }
     }
 
@@ -341,7 +341,7 @@ define apache::vhost::ssl (
         source  => $certchain,
         seltype => 'cert_t',
         notify  => Exec['apache-graceful'],
-        require => File["${apache::params::root}/${name}/ssl"],
+        require => File["${cegeka_apache::params::root}/${name}/ssl"],
       }
     }
 
@@ -352,8 +352,8 @@ define apache::vhost::ssl (
       default => present,
     }
     $real_csr_path = $publish_csr ? {
-      true    => "${apache::params::root}/${name}/htdocs/${name}.csr",
-      false   => "${apache::params::root}/${name}/htdocs/${name}.csr",
+      true    => "${cegeka_apache::params::root}/${name}/htdocs/${name}.csr",
+      false   => "${cegeka_apache::params::root}/${name}/htdocs/${name}.csr",
       default => $publish_csr,
     }
     $real_csr_source = $publish_csr ? {

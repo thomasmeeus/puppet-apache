@@ -1,5 +1,5 @@
 #
-# == Class: apache::dev
+# == Class: cegeka_apache::dev
 #
 # Installs package(s) required to build apache modules using apxs.
 #
@@ -7,9 +7,9 @@
 #
 # Example usage:
 #
-#   include apache::dev
+#   include cegeka_apache::dev
 #
-class apache::dev {
+class cegeka_apache::dev {
   $pkgname  = $::operatingsystem ? {
     /RedHat|CentOS/ => 'httpd-devel',
     /Debian|Ubuntu/ => 'apache2-threaded-dev',

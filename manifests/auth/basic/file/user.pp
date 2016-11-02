@@ -1,4 +1,4 @@
-define apache::auth::basic::file::user (
+define cegeka_apache::auth::basic::file::user (
   $vhost,
   $ensure='present',
   $authname=false,
@@ -8,16 +8,16 @@ define apache::auth::basic::file::user (
 
   $fname = regsubst($name, '\s', '_', 'G')
 
-  include apache::params
+  include cegeka_apache::params
 
-  if defined(Apache::Module['authn_file']) {} else {
-    apache::module {'authn_file': }
+  if defined(Cegeka_apache::Module['authn_file']) {} else {
+    cegeka_apache::module {'authn_file': }
   }
 
   if $authUserFile {
     $_authUserFile = $authUserFile
   } else {
-    $_authUserFile = "${apache::params::root}/${vhost}/private/htpasswd"
+    $_authUserFile = "${cegeka_apache::params::root}/${vhost}/private/htpasswd"
   }
 
   if $authname {
@@ -38,9 +38,9 @@ define apache::auth::basic::file::user (
     default  => undef,
   }
 
-  file {"${apache::params::root}/${vhost}/conf/auth-basic-file-user-${fname}.conf":
+  file {"${cegeka_apache::params::root}/${vhost}/conf/auth-basic-file-user-${fname}.conf":
     ensure  => $ensure,
-    content => template('apache/auth-basic-file-user.erb'),
+    content => template('cegeka_apache/auth-basic-file-user.erb'),
     seltype => $confseltype,
     notify  => Exec['apache-graceful'],
   }

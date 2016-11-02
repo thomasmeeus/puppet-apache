@@ -1,5 +1,5 @@
-class apache::webdav::ssl::debian {
-  include apache::webdav::base
+class cegeka_apache::webdav::ssl::debian {
+  include cegeka_apache::webdav::base
 
   case $::lsbdistcodename {
     etch: {

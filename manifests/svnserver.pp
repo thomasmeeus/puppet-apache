@@ -1,5 +1,5 @@
-class apache::svnserver {
-  include apache::ssl
+class cegeka_apache::svnserver {
+  include cegeka_apache::ssl
 
   case $::operatingsystem {
 
@@ -21,7 +21,7 @@ class apache::svnserver {
     ensure => present,
   }
 
-  apache::module { ['dav','dav_svn']:
+  cegeka_apache::module { ['dav','dav_svn']:
     ensure  => present,
     require => Package[ $pkglist ],
   }

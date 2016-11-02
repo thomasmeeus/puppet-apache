@@ -1,6 +1,6 @@
-define apache::webdav::svn ($ensure, $vhost, $parentPath, $confname) {
+define cegeka_apache::webdav::svn ($ensure, $vhost, $parentPath, $confname) {
 
-  include apache::params
+  include cegeka_apache::params
 
   $location = $name
 
@@ -9,9 +9,9 @@ define apache::webdav::svn ($ensure, $vhost, $parentPath, $confname) {
     'CentOS' => 'httpd_config_t',
     default  => undef,
   }
-  file { "${apache::params::root}/${vhost}/conf/${confname}.conf":
+  file { "${cegeka_apache::params::root}/${vhost}/conf/${confname}.conf":
     ensure  => $ensure,
-    content => template('apache/webdav-svn.erb'),
+    content => template('cegeka_apache/webdav-svn.erb'),
     seltype => $confseltype,
     notify  => Exec['apache-graceful'],
   }

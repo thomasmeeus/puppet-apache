@@ -1,16 +1,16 @@
 /*
 
-== Definition: apache::vhost-ssl
+== Definition: cegeka_apache::vhost-ssl
 
 This definition is deprecated and was replaced
-by apache::vhost::ssl.
+by cegeka_apache::vhost::ssl.
 
-The definition now wraps around apache::vhost::ssl
+The definition now wraps around cegeka_apache::vhost::ssl
 for backward compatibility reasons.
 
 
 */
-define apache::vhost-ssl (
+define cegeka_apache::vhost-ssl (
   $ensure=present,
   $config_file='',
   $config_content=false,
@@ -39,9 +39,9 @@ define apache::vhost-ssl (
   $accesslog_format='combined'
 ) {
 
-  warning 'apache::vhost-ssl is deprecated. Use apache::vhost::ssl instead'
+  warning 'cegeka_apache::vhost-ssl is deprecated. Use cegeka_apache::vhost::ssl instead'
 
-  apache::vhost::ssl{$name:
+  cegeka_apache::vhost::ssl{$name:
     ensure            => $ensure,
     config_file       => $config_file,
     config_content    => $config_content,

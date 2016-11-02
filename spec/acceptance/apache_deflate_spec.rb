@@ -7,13 +7,13 @@ when 'Debian'
   confd = '/etc/apache2/conf.d'
 end
 
-describe 'apache::deflate' do
+describe 'cegeka_apache::deflate' do
 
   describe 'running puppet code' do
     it 'should work with no errors' do
       pp = <<-EOS
-        include apache
-        include apache::deflate
+        include cegeka_apache
+        include cegeka_apache::deflate
       EOS
 
       # Run it twice and test for idempotency

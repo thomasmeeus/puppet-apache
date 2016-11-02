@@ -1,14 +1,14 @@
 require 'spec_helper_acceptance'
 
-describe 'apache::vhost::ssl' do
+describe 'cegeka_apache::vhost::ssl' do
 
   describe 'running puppet code' do
     it 'should work with no errors' do
       pp = <<-EOS
-        include apache
-        include apache::ssl
+        include cegeka_apache
+        include cegeka_apache::ssl
 
-        apache::vhost::ssl { 'test-hsts.example.com':
+        cegeka_apache::vhost::ssl { 'test-hsts.example.com':
           ensure      => present,
           enablehsts  => true,
         }

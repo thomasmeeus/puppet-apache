@@ -1,11 +1,11 @@
-define apache::webdav::instance ($vhost, $ensure=present, $directory=false,$mode=2755) {
+define cegeka_apache::webdav::instance ($vhost, $ensure=present, $directory=false,$mode=2755) {
 
-  include apache::params
+  include cegeka_apache::params
 
   if $directory {
     $davdir = "${directory}/webdav-${name}"
   } else {
-    $davdir = "${apache::params::root}/${vhost}/private/webdav-${name}"
+    $davdir = "${cegeka_apache::params::root}/${vhost}/private/webdav-${name}"
   }
 
   $real_ensure = $ensure ? {
@@ -25,9 +25,9 @@ define apache::webdav::instance ($vhost, $ensure=present, $directory=false,$mode
     'CentOS' => 'httpd_config_t',
     default  => undef,
   }
-  file { "${apache::params::root}/${vhost}/conf/webdav-${name}.conf":
+  file { "${cegeka_apache::params::root}/${vhost}/conf/webdav-${name}.conf":
     ensure  => $ensure,
-    content => template('apache/webdav-config.erb'),
+    content => template('cegeka_apache/webdav-config.erb'),
     seltype => $sysseltype,
     require => File[$davdir],
     notify  => Exec['apache-graceful'],

@@ -1,4 +1,4 @@
-define apache::auth::basic::file::group (
+define cegeka_apache::auth::basic::file::group (
   $vhost,
   $groups,
   $ensure='present',
@@ -9,22 +9,22 @@ define apache::auth::basic::file::group (
 
   $fname = regsubst($name, '\s', '_', 'G')
 
-  include apache::params
+  include cegeka_apache::params
 
-  if defined(Apache::Module['authn_file']) {} else {
-    apache::module {'authn_file': }
+  if defined(Cegeka_apache::Module['authn_file']) {} else {
+    cegeka_apache::module {'authn_file': }
   }
 
   if $authUserFile {
     $_authUserFile = $authUserFile
   } else {
-    $_authUserFile = "${apache::params::root}/${vhost}/private/htpasswd"
+    $_authUserFile = "${cegeka_apache::params::root}/${vhost}/private/htpasswd"
   }
 
   if $authGroupFile {
     $_authGroupFile = $authGroupFile
   } else {
-    $_authGroupFile = "${apache::params::root}/${vhost}/private/htgroup"
+    $_authGroupFile = "${cegeka_apache::params::root}/${vhost}/private/htgroup"
   }
 
   if $authname {
@@ -38,9 +38,9 @@ define apache::auth::basic::file::group (
     default  => undef,
   }
 
-  file { "${apache::params::root}/${vhost}/conf/auth-basic-file-group-${fname}.conf":
+  file { "${cegeka_apache::params::root}/${vhost}/conf/auth-basic-file-group-${fname}.conf":
     ensure  => $ensure,
-    content => template('apache/auth-basic-file-group.erb'),
+    content => template('cegeka_apache/auth-basic-file-group.erb'),
     seltype => $confseltype,
     notify  => Exec['apache-graceful'],
   }

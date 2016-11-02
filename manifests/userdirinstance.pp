@@ -1,15 +1,15 @@
-define apache::userdirinstance ($vhost, $ensure=present) {
+define cegeka_apache::userdirinstance ($vhost, $ensure=present) {
 
-  include apache::params
+  include cegeka_apache::params
 
   $confseltype = $::operatingsystem ? {
     'RedHat'  => 'httpd_config_t',
     'CentOS'  => 'httpd_config_t',
     default   => undef,
   }
-  file { "${apache::params::root}/${vhost}/conf/userdir.conf":
+  file { "${cegeka_apache::params::root}/${vhost}/conf/userdir.conf":
     ensure      => $ensure,
-    source      => 'puppet:///modules/apache/userdir.conf',
+    source      => 'puppet:///modules/cegeka_apache/userdir.conf',
     seltype     => $confseltype,
     notify      => Exec['apache-graceful'],
   }

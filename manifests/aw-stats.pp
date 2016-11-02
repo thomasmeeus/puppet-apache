@@ -1,19 +1,19 @@
-define apache::aw-stats($ensure=present, $aliases=[]) {
+define cegeka_apache::aw-stats($ensure=present, $aliases=[]) {
 
-  include apache::params
+  include cegeka_apache::params
 
   # used in ERB template
-  $wwwroot = $apache::params::root
+  $wwwroot = $cegeka_apache::params::root
 
   file { "/etc/awstats/awstats.${name}.conf":
     ensure  => $ensure,
-    content => template('apache/awstats.erb'),
-    require => [Package['apache'], Class['apache::awstats']],
+    content => template('cegeka_apache/awstats.erb'),
+    require => [Package['cegeka_apache'], Class['cegeka_apache::awstats']],
   }
 
   $awstatsconf = $::operatingsystem ? {
-    /RedHat|CentOS/ => 'puppet:///modules/apache/awstats.rh.conf',
-    /Debian|Ubuntu/ => 'puppet:///modules/apache/awstats.deb.conf',
+    /RedHat|CentOS/ => 'puppet:///modules/cegeka_apache/awstats.rh.conf',
+    /Debian|Ubuntu/ => 'puppet:///modules/cegeka_apache/awstats.deb.conf',
   }
 
   $confseltype = $::operatingsystem ? {
@@ -22,13 +22,13 @@ define apache::aw-stats($ensure=present, $aliases=[]) {
     default  => undef,
   }
 
-  file { "${apache::params::root}/${name}/conf/awstats.conf":
+  file { "${cegeka_apache::params::root}/${name}/conf/awstats.conf":
     ensure  => $ensure,
     owner   => root,
     group   => root,
     source  => $awstatsconf,
     seltype => $confseltype,
     notify  => Exec['apache-graceful'],
-    require => Apache::Vhost[$name],
+    require => Cegeka_apache::Vhost[$name],
   }
 }

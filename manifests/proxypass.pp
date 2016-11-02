@@ -1,6 +1,6 @@
 /*
 
-== Definition: apache::proxypass
+== Definition: cegeka_apache::proxypass
 
 Simple way of defining a proxypass directive for a given virtualhost.
 
@@ -23,11 +23,11 @@ Parameters:
 
 Requires:
 - Class["apache"]
-- matching Apache::Vhost[] instance
+- matching Cegeka_apache::Vhost[] instance
 
 Example usage:
 
-  apache::proxypass { "proxy legacy dir to legacy server":
+  cegeka_apache::proxypass { "proxy legacy dir to legacy server":
     ensure       => present,
     location     => "/legacy/",
     url          => "http://legacyserver.example.com",
@@ -37,7 +37,7 @@ Example usage:
   }
 
 */
-define apache::proxypass (
+define cegeka_apache::proxypass (
   $vhost,
   $ensure='present',
   $location='',
@@ -50,21 +50,21 @@ define apache::proxypass (
 
   $fname = regsubst($name, '\s', '_', 'G')
 
-  include apache::params
+  include cegeka_apache::params
 
-  if defined(Apache::Module['proxy']) {} else {
-    apache::module {'proxy':
+  if defined(Cegeka_apache::Module['proxy']) {} else {
+    cegeka_apache::module {'proxy':
     }
   }
 
-  if defined(Apache::Module['proxy_http']) {} else {
-    apache::module {'proxy_http':
+  if defined(Cegeka_apache::Module['proxy_http']) {} else {
+    cegeka_apache::module {'proxy_http':
     }
   }
 
   if ($sslbackend) {
-    if defined(Apache::Module['ssl']) {} else {
-      apache::module {'ssl':
+    if defined(Cegeka_apache::Module['ssl']) {} else {
+      cegeka_apache::module {'ssl':
       }
     }
   }
@@ -76,16 +76,16 @@ define apache::proxypass (
   }
 
   $proxypassconfig = $filename ? {
-    ''      => "${apache::params::root}/${vhost}/conf/proxypass-${fname}.conf",
-    default => "${apache::params::root}/${vhost}/conf/${filename}",
+    ''      => "${cegeka_apache::params::root}/${vhost}/conf/proxypass-${fname}.conf",
+    default => "${cegeka_apache::params::root}/${vhost}/conf/${filename}",
   }
 
   file { "${name} proxypass on ${vhost}":
     ensure  => $ensure,
-    content => template('apache/proxypass.erb'),
+    content => template('cegeka_apache/proxypass.erb'),
     seltype => $confseltype,
     path    => $proxypassconfig,
     notify  => Exec['apache-graceful'],
-    require => Apache::Vhost[$vhost],
+    require => Cegeka_apache::Vhost[$vhost],
   }
 }

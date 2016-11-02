@@ -1,9 +1,9 @@
-class apache::administration {
+class cegeka_apache::administration {
 
-  include apache::params
+  include cegeka_apache::params
 
   $distro_specific_apache_sudo = $::operatingsystem ? {
-    /RedHat|CentOS/ => "/usr/sbin/apachectl, /sbin/service ${apache::params::pkg}",
+    /RedHat|CentOS/ => "/usr/sbin/apachectl, /sbin/service ${cegeka_apache::params::pkg}",
     /Debian|Ubuntu/ => '/usr/sbin/apache2ctl',
   }
 
@@ -12,12 +12,12 @@ class apache::administration {
   }
 
   # used in erb template
-  $wwwpkgname = $apache::params::pkg
-  $wwwuser    = $apache::params::user
+  $wwwpkgname = $cegeka_apache::params::pkg
+  $wwwuser    = $cegeka_apache::params::user
 
   sudo::directive { 'apache-administration':
     ensure  => present,
-    content => template('apache/sudoers.apache.erb'),
+    content => template('cegeka_apache/sudoers.apache.erb'),
     require => Group['apache-admin'],
   }
 

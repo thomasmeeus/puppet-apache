@@ -1,26 +1,26 @@
-class apache::params {
+class cegeka_apache::params {
 
   $pkg = $::operatingsystem ? {
     /RedHat|CentOS/ => 'httpd',
     /Debian|Ubuntu/ => 'apache2',
   }
 
-  $root = $apache::apache_vhost_root ? {
+  $root = $cegeka_apache::apache_vhost_root ? {
     ''      => $::operatingsystem ? {
       /RedHat|CentOS/ => '/var/www/vhosts',
       /Debian|Ubuntu/ => '/var/www',
     },
-    default => $apache::apache_vhost_root
+    default => $cegeka_apache::apache_vhost_root
   }
 
-  $service_status = $apache::ensure_status ? {
+  $service_status = $cegeka_apache::ensure_status ? {
     ''      => 'running',
-    default => $apache::ensure_status
+    default => $cegeka_apache::ensure_status
   }
 
-  $default_port = $apache::default_port ? {
+  $default_port = $cegeka_apache::default_port ? {
     ''      => '80',
-    default => $apache::default_port,
+    default => $cegeka_apache::default_port,
   }
 
   $user = $::operatingsystem ? {
@@ -63,7 +63,7 @@ class apache::params {
     /Debian|Ubuntu/ => "${log}/error.log",
   }
 
-  $logrotate_paths = "${apache::params::root}/*/logs/*.log ${apache::params::log}/*log"
+  $logrotate_paths = "${cegeka_apache::params::root}/*/logs/*.log ${cegeka_apache::params::log}/*log"
   $httpd_pid_file = $::operatingsystem ? {
     /RedHat|CentOS/ => '/etc/httpd/run/httpd.pid',
     /Debian|Ubuntu/ => '/etc/httpd/run/httpd.pid',

@@ -52,7 +52,8 @@ define cegeka_apache::conf($configuration, $path, $ensure=present, $filename='',
     content => "# file managed by puppet\n${configuration}\n",
     seltype => $confseltype,
     path    => $real_conf_path,
-    notify  => Exec['apache-graceful'],
+    notify  => Exec['cegeka_apache-graceful'],
+    require => Package['httpd']
   }
 
 }

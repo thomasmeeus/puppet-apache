@@ -37,7 +37,7 @@ class cegeka_apache::userdir {
   # Disable global userdir activation
   file {'/etc/apache2/mods-enabled/userdir.conf':
     ensure => absent,
-    notify => Exec['apache-graceful'],
+    notify => Exec['cegeka_apache-graceful'],
   }
 
 }

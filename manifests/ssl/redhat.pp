@@ -15,14 +15,14 @@ class cegeka_apache::ssl::redhat {
     ensure  => absent,
     require => Package['mod_ssl'],
     notify  => Service['cegeka_apache'],
-    before  => Exec['apache-graceful'],
+    before  => Exec['cegeka_apache-graceful'],
   }
 
   cegeka_apache::module { 'ssl':
     ensure  => present,
     require => File['/etc/httpd/conf.d/ssl.conf'],
     notify  => Service['cegeka_apache'],
-    before  => Exec['apache-graceful'],
+    before  => Exec['cegeka_apache-graceful'],
   }
 
   case $::operatingsystemrelease{

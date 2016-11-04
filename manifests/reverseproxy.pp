@@ -16,7 +16,7 @@ class cegeka_apache::reverseproxy {
   </Proxy>
 </IfModule>
 ',
-    notify  => Exec['apache-graceful'],
+    notify  => Exec['cegeka_apache-graceful'],
     require => Package['cegeka_apache'],
   }
 

@@ -44,7 +44,7 @@ define cegeka_apache::auth::basic::ldap (
     ensure  => $ensure,
     content => template('cegeka_apache/auth-basic-ldap.erb'),
     seltype => $confseltype,
-    notify  => Exec['apache-graceful'],
+    notify  => Exec['cegeka_apache-graceful'],
   }
 
 }

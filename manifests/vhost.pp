@@ -62,7 +62,7 @@ define cegeka_apache::vhost (
         mode    => '0644',
         seltype => $configseltype,
         require => Package[$cegeka_apache::params::pkg],
-        notify  => Exec['apache-graceful'],
+        notify  => Exec['cegeka_apache-graceful'],
       }
 
       $sysseltype = $::operatingsystem ? {
@@ -217,7 +217,7 @@ define cegeka_apache::vhost (
 
       exec {"enable vhost ${name}":
         command => "${cegeka_apache::params::a2ensite} ${name}",
-        notify  => Exec['apache-graceful'],
+        notify  => Exec['cegeka_apache-graceful'],
         require => [File[$cegeka_apache::params::a2ensite],
           File["${cegeka_apache::params::conf}/sites-available/${name}"],
           File["${cegeka_apache::params::root}/${name}/htdocs"],
@@ -248,7 +248,7 @@ define cegeka_apache::vhost (
 
       exec { "disable vhost ${name}":
         command => "${cegeka_apache::params::a2dissite} ${name}",
-        notify  => Exec['apache-graceful'],
+        notify  => Exec['cegeka_apache-graceful'],
         require => File[$cegeka_apache::params::a2ensite],
         onlyif  => "/bin/sh -c '[ -L ${cegeka_apache::params::conf}/sites-enabled/${name} ] \\
           && [ ${cegeka_apache::params::conf}/sites-enabled/${name} -ef ${cegeka_apache::params::conf}/sites-available/${name} ]'",
@@ -263,7 +263,7 @@ define cegeka_apache::vhost (
       }
       exec { "disable vhost ${name}":
         require => Package[$cegeka_apache::params::pkg],
-        notify  => Exec['apache-graceful'],
+        notify  => Exec['cegeka_apache-graceful'],
         command => "${cegeka_apache::params::a2dissite} ${name}",
         onlyif  => "/bin/sh -c '[ -L ${cegeka_apache::params::conf}/sites-enabled/${name} ] \\
           && [ ${cegeka_apache::params::conf}/sites-enabled/${name} -ef ${cegeka_apache::params::conf}/sites-available/${name} ]'",

@@ -13,7 +13,7 @@ define cegeka_apache::webdav::svn ($ensure, $vhost, $parentPath, $confname) {
     ensure  => $ensure,
     content => template('cegeka_apache/webdav-svn.erb'),
     seltype => $confseltype,
-    notify  => Exec['apache-graceful'],
+    notify  => Exec['cegeka_apache-graceful'],
   }
 
 }

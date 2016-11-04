@@ -54,7 +54,7 @@ define cegeka_apache::vhost_access_restriction (
     ensure  => $ensure,
     content => template('cegeka_apache/vhost_access_restriction.erb'),
     path    => "${cegeka_apache::params::root}/${vhost}/conf/00-vhost_access_restriction-${name}.conf",
-    notify  => Exec['apache-graceful'],
+    notify  => Exec['cegeka_apache-graceful'],
     require => Cegeka_apache::Vhost[$vhost],
   }
 }

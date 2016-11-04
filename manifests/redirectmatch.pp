@@ -55,7 +55,7 @@ define cegeka_apache::redirectmatch (
     content => "# file managed by puppet\nRedirectMatch ${regex} ${url}\n",
     seltype => $confseltype,
     path    => $real_conf_path,
-    notify  => Exec['apache-graceful'],
+    notify  => Exec['cegeka_apache-graceful'],
     require => Cegeka_apache::Vhost[$vhost],
   }
 }

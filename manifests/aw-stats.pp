@@ -28,7 +28,7 @@ define cegeka_apache::aw-stats($ensure=present, $aliases=[]) {
     group   => root,
     source  => $awstatsconf,
     seltype => $confseltype,
-    notify  => Exec['apache-graceful'],
+    notify  => Exec['cegeka_apache-graceful'],
     require => Cegeka_apache::Vhost[$name],
   }
 }

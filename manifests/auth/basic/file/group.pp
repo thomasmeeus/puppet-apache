@@ -42,7 +42,7 @@ define cegeka_apache::auth::basic::file::group (
     ensure  => $ensure,
     content => template('cegeka_apache/auth-basic-file-group.erb'),
     seltype => $confseltype,
-    notify  => Exec['apache-graceful'],
+    notify  => Exec['cegeka_apache-graceful'],
   }
 
 }

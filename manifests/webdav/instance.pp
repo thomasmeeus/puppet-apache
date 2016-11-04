@@ -30,6 +30,6 @@ define cegeka_apache::webdav::instance ($vhost, $ensure=present, $directory=fals
     content => template('cegeka_apache/webdav-config.erb'),
     seltype => $sysseltype,
     require => File[$davdir],
-    notify  => Exec['apache-graceful'],
+    notify  => Exec['cegeka_apache-graceful'],
   }
 }

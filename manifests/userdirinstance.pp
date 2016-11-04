@@ -11,6 +11,6 @@ define cegeka_apache::userdirinstance ($vhost, $ensure=present) {
     ensure      => $ensure,
     source      => 'puppet:///modules/cegeka_apache/userdir.conf',
     seltype     => $confseltype,
-    notify      => Exec['apache-graceful'],
+    notify      => Exec['cegeka_apache-graceful'],
   }
 }

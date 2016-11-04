@@ -237,7 +237,7 @@ define cegeka_apache::vhost::ssl (
         environment => ["HOME=."],
         command     => "/usr/local/sbin/generate-ssl-cert.sh ${name} ${cegeka_apache::params::root}/${name}/ssl/ssleay.cnf ${cegeka_apache::params::root}/${name}/ssl/ ${days}",
         creates     => $csrfile,
-        notify      => Exec['apache-graceful'],
+        notify      => Exec['cegeka_apache-graceful'],
         require     => [
           File["${cegeka_apache::params::root}/${name}/ssl/ssleay.cnf"],
           File['/usr/local/sbin/generate-ssl-cert.sh'],
@@ -259,7 +259,7 @@ define cegeka_apache::vhost::ssl (
         mode    => '0640',
         source  => $certificate,
         seltype => 'cert_t',
-        notify  => Exec['apache-graceful'],
+        notify  => Exec['cegeka_apache-graceful'],
         require => [File["${cegeka_apache::params::root}/${name}/ssl"], Exec["generate-ssl-cert-${name}"]],
       }
     } else {
@@ -269,7 +269,7 @@ define cegeka_apache::vhost::ssl (
         mode    => '0640',
         source  => $certificate,
         seltype => 'cert_t',
-        notify  => Exec['apache-graceful'],
+        notify  => Exec['cegeka_apache-graceful'],
         require => [File["${cegeka_apache::params::root}/${name}/ssl"]]
       }
     }
@@ -288,7 +288,7 @@ define cegeka_apache::vhost::ssl (
         mode    => '0600',
         source  => $certificate_key,
         seltype => 'cert_t',
-        notify  => Exec['apache-graceful'],
+        notify  => Exec['cegeka_apache-graceful'],
         require => [File["${cegeka_apache::params::root}/${name}/ssl"], Exec["generate-ssl-cert-${name}"]],
       }
     } else {
@@ -298,7 +298,7 @@ define cegeka_apache::vhost::ssl (
         mode    => '0600',
         source  => $certificate_key,
         seltype => 'cert_t',
-        notify  => Exec['apache-graceful'],
+        notify  => Exec['cegeka_apache-graceful'],
         require => [File["${cegeka_apache::params::root}/${name}/ssl"]]
       }
     }
@@ -312,7 +312,7 @@ define cegeka_apache::vhost::ssl (
         mode    => '0640',
         source  => $cacert,
         seltype => 'cert_t',
-        notify  => Exec['apache-graceful'],
+        notify  => Exec['cegeka_apache-graceful'],
         require => File["${cegeka_apache::params::root}/${name}/ssl"],
       }
     }
@@ -325,7 +325,7 @@ define cegeka_apache::vhost::ssl (
         mode    => '0640',
         source  => $cacrl,
         seltype => 'cert_t',
-        notify  => Exec['apache-graceful'],
+        notify  => Exec['cegeka_apache-graceful'],
         require => File["${cegeka_apache::params::root}/${name}/ssl"],
       }
     }
@@ -340,7 +340,7 @@ define cegeka_apache::vhost::ssl (
         mode    => '0640',
         source  => $certchain,
         seltype => 'cert_t',
-        notify  => Exec['apache-graceful'],
+        notify  => Exec['cegeka_apache-graceful'],
         require => File["${cegeka_apache::params::root}/${name}/ssl"],
       }
     }

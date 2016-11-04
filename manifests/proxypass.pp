@@ -85,7 +85,7 @@ define cegeka_apache::proxypass (
     content => template('cegeka_apache/proxypass.erb'),
     seltype => $confseltype,
     path    => $proxypassconfig,
-    notify  => Exec['apache-graceful'],
+    notify  => Exec['cegeka_apache-graceful'],
     require => Cegeka_apache::Vhost[$vhost],
   }
 }

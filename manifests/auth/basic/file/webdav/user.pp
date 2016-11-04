@@ -45,7 +45,7 @@ define cegeka_apache::auth::basic::file::webdav::user (
     ensure     => $ensure,
     content    => template('cegeka_apache/auth-basic-file-webdav-user.erb'),
     seltype    => $confseltype,
-    notify     => Exec['apache-graceful'],
+    notify     => Exec['cegeka_apache-graceful'],
   }
 
 }

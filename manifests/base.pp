@@ -100,7 +100,7 @@ class cegeka_apache::base {
 
   cegeka_apache::module { $real_apache_modules :
     ensure => present,
-    notify => Exec['apache-graceful'],
+    notify => Exec['cegeka_apache-graceful'],
   }
 
   $statusfile_path = $::operatingsystem ? {
@@ -118,7 +118,7 @@ class cegeka_apache::base {
     group   => root,
     source  => $statusfile_source,
     require => Module['status'],
-    notify  => Exec['apache-graceful'],
+    notify  => Exec['cegeka_apache-graceful'],
   }
 
   file {'default virtualhost':
@@ -126,7 +126,7 @@ class cegeka_apache::base {
     path    => "${cegeka_apache::params::conf}/sites-available/default-vhost",
     content => template('cegeka_apache/default-vhost.erb'),
     require => Package['cegeka_apache'],
-    notify  => Exec['apache-graceful'],
+    notify  => Exec['cegeka_apache-graceful'],
     before  => File["${cegeka_apache::params::conf}/sites-enabled/000-default-vhost"],
     mode    => '0644',
   }
@@ -135,7 +135,7 @@ class cegeka_apache::base {
 
     file { "${cegeka_apache::params::conf}/sites-enabled/000-default-vhost":
       ensure => absent,
-      notify => Exec['apache-graceful'],
+      notify => Exec['cegeka_apache-graceful'],
     }
 
   } else {
@@ -143,7 +143,7 @@ class cegeka_apache::base {
     file { "${cegeka_apache::params::conf}/sites-enabled/000-default-vhost":
       ensure => link,
       target => "${cegeka_apache::params::conf}/sites-available/default-vhost",
-      notify => Exec['apache-graceful'],
+      notify => Exec['cegeka_apache-graceful'],
     }
 
     file { "${cegeka_apache::params::root}/html":
@@ -152,7 +152,7 @@ class cegeka_apache::base {
 
   }
 
-  exec { 'apache-graceful':
+  exec { 'cegeka_apache-graceful':
     command     => '/usr/sbin/apachectl graceful',
     refreshonly => true,
     onlyif      => '/usr/sbin/apachectl configtest',
@@ -170,7 +170,7 @@ class cegeka_apache::base {
           "${cegeka_apache::params::conf}/sites-enabled/000-default",
           "${cegeka_apache::params::conf}/sites-enabled/default-ssl"]:
     ensure => absent,
-    notify => Exec['apache-graceful'],
+    notify => Exec['cegeka_apache-graceful'],
   }
 
 }

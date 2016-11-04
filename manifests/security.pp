@@ -17,7 +17,7 @@ class cegeka_apache::security {
 </IfModule>
 ',
         require => Package['mod_security'],
-        notify  => Exec['apache-graceful'],
+        notify  => Exec['cegeka_apache-graceful'],
       }
     }
 

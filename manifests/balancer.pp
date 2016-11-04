@@ -112,7 +112,7 @@ define cegeka_apache::balancer (
     content => template('cegeka_apache/balancer.erb'),
     seltype => $confseltype,
     path    => $real_conf_path,
-    notify  => Exec['apache-graceful'],
+    notify  => Exec['cegeka_apache-graceful'],
     require => Cegeka_apache::Vhost[$vhost],
   }
 }

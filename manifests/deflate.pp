@@ -15,7 +15,7 @@ class cegeka_apache::deflate {
   BrowserMatch Safari/4 no-gzip
 </IfModule>
 ',
-    notify  => Exec['apache-graceful'],
+    notify  => Exec['cegeka_apache-graceful'],
     require => Package['cegeka_apache'],
   }
 

@@ -78,7 +78,7 @@ class cegeka_apache::redhat {
   # this module is statically compiled on debian and must be enabled here
   cegeka_apache::module {'log_config':
     ensure => present,
-    notify => Exec['apache-graceful'],
+    notify => Exec['cegeka_apache-graceful'],
   }
 
   # it makes no sens to put CGI here, deleted from the default vhost config
@@ -94,7 +94,7 @@ class cegeka_apache::redhat {
   file { "${cegeka_apache::params::conf}/conf.d/proxy_ajp.conf":
     ensure  => absent,
     require => Package['cegeka_apache'],
-    notify  => Exec['apache-graceful'],
+    notify  => Exec['cegeka_apache-graceful'],
   }
 
 }

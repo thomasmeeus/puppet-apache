@@ -220,19 +220,19 @@ define cegeka_apache::vhost::ssl (
       require => [File["${cegeka_apache::params::root}/${name}"]],
     }
 
-    # template file used to generate SSL key, cert and csr.
-    file { "${cegeka_apache::params::root}/${name}/ssl/ssleay.cnf":
-      ensure  => present,
-      owner   => 'root',
-      mode    => '0640',
-      content => template('cegeka_apache/ssleay.cnf.erb'),
-      require => File["${cegeka_apache::params::root}/${name}/ssl"],
-    }
+    if ($genssl) {
+      # template file used to generate SSL key, cert and csr.
+      file { "${cegeka_apache::params::root}/${name}/ssl/ssleay.cnf":
+        ensure  => present,
+        owner   => 'root',
+        mode    => '0640',
+        content => template('cegeka_apache/ssleay.cnf.erb'),
+        require => File["${cegeka_apache::params::root}/${name}/ssl"],
+      }
 
     # The certificate and the private key will be generated only if $name.crt
     # or $name.key are absent from the "ssl/" subdir.
     # The CSR will be re-generated each time this resource is triggered.
-    if ($genssl) {
       exec { "generate-ssl-cert-${name}":
         environment => ["HOME=."],
         command     => "/usr/local/sbin/generate-ssl-cert.sh ${name} ${cegeka_apache::params::root}/${name}/ssl/ssleay.cnf ${cegeka_apache::params::root}/${name}/ssl/ ${days}",

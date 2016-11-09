@@ -53,7 +53,7 @@ define cegeka_apache::conf($configuration, $path, $ensure=present, $filename='',
     seltype => $confseltype,
     path    => $real_conf_path,
     notify  => Exec['cegeka_apache-graceful'],
-    require => Package['httpd']
+    require => Package['cegeka_apache']
   }
 
 }

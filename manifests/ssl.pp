@@ -29,7 +29,7 @@ Example usage:
   include cegeka_apache::ssl
 
 */
-class cegeka_apache::ssl inherits apache {
+class cegeka_apache::ssl inherits cegeka_apache {
   case $::operatingsystem {
     Debian,Ubuntu:  { include cegeka_apache::ssl::debian}
     RedHat,CentOS:  { include cegeka_apache::ssl::redhat}
